@@ -1,0 +1,224 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28-mrt-2014, 8:16:39
+    Author     : Mark.Vanderveken
+*/
+
+/* RESET */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td { margin: 0; padding: 0; } 
+body{font-size:100%;}
+ul{list-style:none;}
+/* Einde RESET */
+
+body{
+    font-family:Calibri,Arial,Helvetica,sans-serif;
+    background:whitesmoke;
+}
+a{
+    text-decoration:none;
+}
+button, input[type=submit]{
+    background:crimson;
+    color:white;
+}
+header,footer{
+    background:crimson;
+    overflow:hidden;
+}
+footer{
+    clear:both;
+    margin-top:2em;
+}
+
+.container{
+    clear:both;
+    width:80%;
+    margin:0 auto;
+}
+.login{
+    float:left;
+}
+.about{
+    float:left;
+    width:5em;
+}
+.productholder{
+    width:45%;
+    background:crimson;
+    margin-top:0.5em;
+    border-radius:1em;
+    padding-left:1em;
+    height:5em;
+}
+.productholder *{
+    color:white;
+}
+.productholder .naam{
+    font-size:120%;
+    font-weight:bold;
+}
+.productholder .omschrijving{
+    margin-top:0.5em;
+    height:2.5em;
+    background:#ff9999;
+    width:80%;
+    border-radius:1em;
+    border:1px solid whitesmoke;
+    margin-left:-0.5em;
+    padding-left:0.5em;
+    border-top-left-radius: 0em;
+}
+.productholder .prijs{
+    float:right;
+    margin-right:0.5em;
+}
+.bestelregels{
+    margin-top:-27em;
+    width:40%;
+    float:right;
+}
+.winkelmandimg img{
+    width:100%;
+}
+.winkelmandimg{
+    width:1em;
+    float:right;
+    margin-right:40%;
+}
+.bestelregelholder{
+    border-radius:1em;
+    border-top-left-radius: 0em;
+    background:cornsilk;
+    clear:both;
+    margin-top:0.5em;
+    height:2em;
+}
+#bestelregelheader{
+    border-radius:1em;
+    padding-left:1em;
+    background:cornsilk;
+}
+.bestelregelholder .naam{
+    font-size:120%;
+    font-weight:bold;
+    margin-left:2em;
+}
+.bestelregelholder .prijs,.bestelregelholder .verwijderbutton{
+    margin-top:-1.1em;
+    float:right;
+    margin-right:1em;
+}
+.bestelregelholder .verwijderbutton{
+    float:right;
+}
+.totaalprijs{
+    padding-left:2.5em;
+    font-weight:bold;
+    background:#FF9999
+}
+.klantgegevens{
+    margin-top:1em;
+    clear:both;
+    height:5em;
+    padding-left:2.5em;
+    background:cornsilk;
+    border-radius:1em;
+   height:27em;
+}
+.klantgegevens input{
+    display:block;
+    margin-top:0.25em;
+}
+.klantgegevens textarea{
+    display:block;
+}
+.klantgegevens label{
+    clear:both;
+}
+/* bestellingoverzicht<editor-fold defaultstate="collapsed" desc="bestellingsoverzicht">*/
+.bestellingsoverzicht{
+    margin-top:3em;
+    width:100%;
+    border-collapse:collapse;
+    background:#cccccc;
+}
+.totaalprijsbestellingoverzicht{
+    background:whitesmoke;
+    font-weight:bold;
+}
+.bestellingsoverzicht *{
+    padding-left:1em;
+
+}
+.bestellingsoverzicht em{
+    padding-left:0;
+    font-style:normal;
+    font-weight: bold;
+}
+.bestellingsoverzicht thead *{
+    width:33.3%;
+    background:yellow;
+
+}
+.link{
+    background: yellow;
+    color:black;
+    margin-left:0.5em;
+    text-align:center;
+    width:5em;
+    float:right;
+    border:2px outset yellow;
+}
+/* </editor-fold>*/
+
+.gastenboek h1{
+    background:crimson;
+    color:white;
+    border-radius:1em;
+    padding-left:0.5em;
+}
+.gastenboek{
+    background:cornsilk;
+    overflow:auto;
+}
+.gastenboek textarea{
+    margin-top:1em;
+    float:left;
+}
+.gastenboek input{
+    margin-top:1em;
+    float:left;
+}
+.bericht{
+    padding-left:0.5em;
+    border:1px solid grey;
+}
+.promo{
+    margin-top:1em;
+    background:crimson;
+    color:white;
+    font-size:130%;
+    border-radius:1em;
+    padding-left:0.5em;
+    font-weight:bold;
+}
+ul{
+    margin-left:1em;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+.bericht{
+    margin-top:1em;
+}
+.error{
+    color:white;
+    font-size:110%;
+    float:right;
+    background:crimson;
+    border-radius:1em;
+    padding:0.5em;
+}

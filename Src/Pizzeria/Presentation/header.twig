@@ -1,0 +1,53 @@
+{# empty Twig template #}
+<!doctype html>
+<html>
+    <head>
+        <title>Pizzeria</title>
+        <link rel="stylesheet" href="src/Pizzeria/css/styles.css"/>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <!-- login form -->
+                <div class="loginform">
+                    {% if ingelogd == false %}
+                        <form class="login" action="usercontroller.php?action=login" method="POST">
+                            <label for="email" value="email"><input name="email" type="email" value=" 
+                            {% if emailadrescookie is not null %}{{emailadrescookie}}{% endif %}
+                                                                "placeholder="emailadres"> 
+                            </label>
+                            <label for="password" value="password">
+                                <input name="password" type="password" placeholder="password"> 
+                            </label>
+                                <input name="login" type="submit" value="login"> 
+                        </form>
+                        {% if error is defined %}
+                            <div class="error">
+                                {% if error=='GeenEmailOpgegeven' %}
+                                    <p>U heeft geen email adres opgegeven</p>
+                                {% elseif error=='GeenPasswordOpgegeven' %}
+                                    <p>U hebt geen paswoord opgegeven</p>
+                                {% elseif error=='UserNietGevonden' %}
+                                    <p>Dit emailadres is niet geregistreerd</p>
+                                {% elseif error=='GeenPasswordOpgegeven' %}
+                                    <p>U hebt geen paswoord opgegeven</p>
+                                {% elseif error=='IncorrectPassword' %}
+                                    <p>U hebt een verkeerd paswoord opgegeven</p>
+                                {% endif %}
+                            </div>
+                        {% endif%}
+                    
+                    {% elseif ingelogd== true%}
+                        <!-- logout button -->
+                    {% if ingelogd!='admin' %}
+                        <a href="usercontroller.php?action=loguit"><button>loguit</button></a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            <nav>
+                <a class="about" href="berichtcontroller.php?action=tooninfo"><button>About Us</button></a>
+                <a class="about" href="usercontroller.php?action=loguit"><button>Bestelmenu</button></a>
+                 <a href="usercontroller.php?action=adminlogin"><button>Bestellingoverzicht</button></a>
+            </nav>
+        </header>
+        <div class='container'>{# empty Twig template #}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <title>klantgegevensoverzicht</title> <link rel="stylesheet" href="Src/Pizzeria/css/styles.css"/>
+        
+    </head>
+    <body> 
+        <form class ="klantgegevens" action="usercontroller.php?action=verandergegevens" method="POST">
+            <label for="naam" value="naam">Naam: <input name="naam" type="text" value="{{klantdata.naam}}"> </label>
+            <label for="voornaam" value="voornaam">Voornaam:<input name="voornaam" type="text" value="{{klantdata.voornaam}}"> </label>
+            <label for="adres" value="adres">Straat: <input name="adres" type="text" value="{{klantdata.straat}}"> </label>
+            <label for="huisnummer" value="huisnummer">Huisnummer: <input name="huisnummer" type="text"  value="{{klantdata.huisnummer}}"> </label>
+            <label for="postcode" value="postcode">Postcode: <input name="postcode" type="text"  value="{{klantdata.postcode.postcode}}"> </label>
+            <label for="woonplaats" value="woonplaats">Woonplaats: <input name="woonplaats" type="text"  value="{{klantdata.postcode.woonplaats}}"> </label>
+            <label for="telefoon" value="telefoon">Telefoon: <input name="telefoon" type="tel"  value="{{klantdata.telefoon}}"> </label>
+            {% if klantdata.email != ''%} 
+            <label for="email"  >Email:
+                <input name="email" type="email" value="{{klantdata.email}}">
+            </label>
+            {%endif%}
+            <label for="opmerking" value="opmerking">Opmerking: <textarea name='opmerking'>{{klantdata.opmerking}}</textarea> </label>
+            <input name="submit" type="submit" value="verzend"> 
+        </form>
+
+    </body>
+</html>
+

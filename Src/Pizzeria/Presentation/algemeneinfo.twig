@@ -1,0 +1,30 @@
+<section>
+    <h1>Welkom bij onze Pizza Leveringsdienst</h1>
+    <p>openingsuren: 17:00-23:00</p>
+    <p>leverzones: Mortsel, Boechout, Lier, Antwerpen</p>
+    <p class='promo'>Promoacties: 
+    <ul>
+        <li>Registreer een account terwijl je bestelt en krijg 2euro korting!
+        </li>      
+        <li>5euro korting op elke tiende bestelling! (enkel voor klanten met een account)
+        </li>      
+    </ul>    
+</p>
+</section>
+<section class="gastenboek">
+        <h1>Gastenboek</h1>
+    {% if gastenboek is defined %} 
+        {% for bericht in gastenboek %}
+            <div class='bericht'>
+                <span>Door: {{bericht.auteur}} </span><span>op: {{bericht.tijdstip}}</span>
+            </div>
+            <div>{{bericht.text}}</div>
+        {% endfor %}
+        <form class='gastenboek' action="berichtcontroller.php?action=voegberichttoe" id ="berichtform" method="POST">
+            <label for="bericht" value="uw bericht"><textarea form="berichtform" name='bericht' id="bericht" placeholder="uw bericht"></textarea></label>
+            <label for="auteur" value="auteur"><input name="auteur" type="text" placeholder="uw naam"> </label>
+            <input name="submit" type="submit" value="verzend"> 
+        </form>
+           
+        {% endif %}
+</section>

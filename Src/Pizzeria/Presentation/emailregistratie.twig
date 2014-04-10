@@ -1,0 +1,41 @@
+{# empty Twig template #}
+<!doctype html>
+<html>
+    <head>
+        <title>emailregistratie</title>
+         <link rel="stylesheet" href="Src/Pizzeria/css/styles.css"/>
+    </head>
+    <body>
+        <div class="container">
+        <form class="login" action="usercontroller.php?action=nieuweaccount" method="POST">
+            <label for="email" value="email">
+                <input name="email" type="email" placeholder="email">
+            </label>
+            <label for="password" value="password">
+                <input name="password" type="password" placeholder="password">
+            </label>
+            <label for="passwordconfirm" placeholder="passwordconfirm">
+                <input name="passwordconfirm" type="password" placeholder='passwordconfirm'>
+            </label>
+            <input name="submit" type="submit" value="verzenden"> 
+        </form>
+        {% if error is defined %}
+            <div class="error">
+        {% if error== 'PasswordsDontMatch'%}
+        <p>Passwords dont match</p>
+        {% elseif error== 'EmailBestaatAl'%}
+        <p>email already registered</p>
+        {% elseif error== 'GeenEmailOpgegeven'%}
+        <p>Geen email opgegeven</p>
+        {% elseif error== 'GeenPasswordOpgegeven'%}
+        <p>Geen paswoord opgegeven</p>
+        {% elseif error== 'GeenPasswordConfirmOpgegeven'%}
+        <p>Geen paswoordbevestiging opgegeven</p>
+        
+{%endif%}
+            </div>
+{% endif %}
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Bestellingsoverzicht</title>
+    </head>
+    <body>
+
+
+<h1>Bestellingsoverzicht</h1>
+    {%for key,bestelling in bestellingen %}
+        <table class="bestellingsoverzicht" border="1">
+            <thead>
+                <tr>
+                    <td><em>klantnaam</em>:  {{bestelling.klantgegevens.naam}} ,{{bestelling.klantgegevens.voornaam}}     </td>   
+                    <td><em>klantnr</em>: {{ bestelling.klantnr}}</td>
+                    <td><em>tijdstip</em>:   {{bestelling.klantgegevens.tijdstip}}     </td>   
+                </tr>
+                <tr>  
+                    <td colspan="3"><em>adres</em>:      {{bestelling.klantgegevens.straat}} {{bestelling.klantgegevens.huisnummer}}, {{bestelling.klantgegevens.postcode.postcode}} {{bestelling.klantgegevens.postcode.woonplaats}}</td>    </tr>
+                <tr>
+                    <td colspan="2"><em>Productnaam</em></td>
+                    <td><em>Prijs</em></td>
+                </tr>
+            </thead>
+            {% for bestelregel in bestelling.bestelregels %}
+                <tr>
+                    <td colspan="2">{{bestelregel.productnaam}}</td>
+                    <td>&euro;{{bestelregel.productprijs/100}}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2"><em>totaalprijs</em>: </td>
+                <td class="totaalprijsbestellingoverzicht">&euro; {{bestelling.prijs/100}}
+                {% if bestelling.korting is defined %}
+                    - &euro; {{bestelling.korting}}   
+                    = &euro; {{ (bestelling.prijs/100)-bestelling.korting }}
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">{{bestelling.klantgegevens.opmerking}}</td></tr>
+        </table>
+        <a href="bestellingoverzichtcontroller.php?action=delete&id={{key}}"><div class="link">delete</div></a>
+    {% endfor %}
+    </body>
+</html>
