@@ -17,63 +17,62 @@ namespace Pizzeria\Entities;
 class Product {
 
     private static $idMap = array();
-    private $productid;
     private $productnaam;
     private $productomschrijving;
     private $productprijs;
-    
-    private function __construct($productid,$productnaam,$productomschrijving,$productprijs){
-        $this->productid=$productid;
-        $this->productnaam=$productnaam;
-        $this->productomschrijving=$productomschrijving;
-        $this->productprijs=$productprijs;
+    private $productaantal;
+
+    // <editor-fold defaultstate="collapsed" desc="CONSTRUCT">
+    function __construct($productnaam, $productomschrijving, $productprijs, $productAantal) {
+        $this->productnaam = $productnaam;
+        $this->productomschrijving = $productomschrijving;
+        $this->productprijs = $productprijs;
+        $this->productAantal = $productAantal;
     }
-    public function create($productid,$productnaam,$productomschrijving,$productprijs) {
-        if(!isset(self::$idMap[$productid])){
-            self::$idMap[$productid]=new Product($productid, $productnaam, $productomschrijving, $productprijs);
+
+// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="CREATE">
+    public function create($productnaam, $productomschrijving, $productprijs, $productAantal) {
+        if (!isset(self::$idMap[$productnaam])) {
+            self::$idMap[$productnaam] = new Product($productnaam, $productomschrijving, $productprijs, $productAantal);
         }
-        return self::$idMap[$productid];
+        return self::$idMap[$productnaam];
     }
 
-// <editor-fold defaultstate="collapsed" desc="getter setter">
-    public function getProductid() {
-        return $this->productid;
-    }
+// </editor-fold>
 
-    public function setProductid($productid) {
-        $this->productid = $productid;
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="GETTER/SETTER">
     public function getProductnaam() {
         return $this->productnaam;
-    }
-
-    public function setProductnaam($productnaam) {
-        $this->productnaam = $productnaam;
     }
 
     public function getProductomschrijving() {
         return $this->productomschrijving;
     }
 
-    public function setProductomschrijving($productomschrijving) {
-        $this->productomschrijving = $productomschrijving;
-    }
-
     public function getProductprijs() {
         return $this->productprijs;
     }
 
-    public function setProductprijs($Productprijs) {
-        $this->productprijs = $Productprijs;
+    public function getProductaantal() {
+        return $this->productaantal;
     }
 
-    public function getBestelregelid() {
-        return $this->bestelregelid;
+    public function setProductnaam($productnaam) {
+        $this->productnaam = $productnaam;
     }
 
-    public function setBestelregelid($bestelregelid) {
-        $this->bestelregelid = $bestelregelid;
+    public function setProductomschrijving($productomschrijving) {
+        $this->productomschrijving = $productomschrijving;
+    }
+
+    public function setProductprijs($productprijs) {
+        $this->productprijs = $productprijs;
+    }
+
+    public function setProductaantal($productAantal) {
+        $this->productAantal = $productaantal;
     }
 
 // </editor-fold>

@@ -18,4 +18,8 @@ class ProductService {
         $productenlijst=ProductDAO::getAll();
         return $productenlijst;
     }
+    public static function zoekProductOpNaam($productnaam) {
+        $product= ProductDAO::getByName($productnaam);
+        return $product;
+    }
 }

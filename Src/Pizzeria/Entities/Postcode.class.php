@@ -11,25 +11,36 @@
  *
  * @author mark.vanderveken
  */
+
 namespace Pizzeria\Entities;
+
 class Postcode {
-    private static $idMap=array();
+
+    private static $idMap = array();
     private $postcodeid;
     private $postcode;
     private $woonplaats;
-    private function __construct($postcodeid,$postcode,$woonplaats){
-        $this->postcodeid=$postcodeid;
-        $this->postcode=$postcode;
-        $this->woonplaats=$woonplaats;
+
+    // <editor-fold defaultstate="collapsed" desc="CONSTRUCT">
+    private function __construct($postcodeid, $postcode, $woonplaats) {
+        $this->postcodeid = $postcodeid;
+        $this->postcode = $postcode;
+        $this->woonplaats = $woonplaats;
     }
-    public static function create($postcodeid,$postcode,$woonplaats) {
+
+// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="CREATE">
+    public static function create($postcodeid, $postcode, $woonplaats) {
         if (!isset(self::$idMap[$postcodeid])) {
-            self::$idMap[$postcodeid]=new Postcode($postcodeid,$postcode,$woonplaats);
+            self::$idMap[$postcodeid] = new Postcode($postcodeid, $postcode, $woonplaats);
         }
         return self::$idMap[$postcodeid];
     }
-    
-// <editor-fold defaultstate="collapsed" desc="getter setter">
+
+// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="GETTER/SETTER">
     public function getPostcodeid() {
         return $this->postcodeid;
     }
@@ -55,7 +66,4 @@ class Postcode {
     }
 
 // </editor-fold>
-
-
-
 }

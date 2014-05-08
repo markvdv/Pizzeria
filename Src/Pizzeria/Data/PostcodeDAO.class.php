@@ -21,11 +21,11 @@ class PostcodeDAO extends DAO {
     public static function getByPostcodeWoonplaats($postcode, $woonplaats) {
         $sql = "SELECT * FROM postcode WHERE postcode=? AND woonplaats=?";
         $args = func_get_args();
-        $stmt = parent::execPreppedStmt($sql, $args);
-        $result = $stmt->fetch();
+        parent::execPreppedStmt($sql, $args);
+        $result = parent::$stmt->fetch();
         if ($result) {
-            $postcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
-            return $postcode;
+            $oPostcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
+            return $oPostcode;
         } else {
             return false;
         }
@@ -34,8 +34,8 @@ class PostcodeDAO extends DAO {
     public static function getById($id) {
         $sql = "SELECT * FROM postcode WHERE postcodeid=?";
         $args = func_get_args();
-        $stmt = parent::execPreppedStmt($sql, $args);
-        $result = $stmt->fetch();
+        parent::execPreppedStmt($sql, $args);
+        $result = parent::$stmt->fetch();
         if ($result) {
             $postcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
             return $postcode;

@@ -1,48 +1,40 @@
-{# empty Twig template #}
-<!doctype html>
-<html>
-    <head>
-        <title>geef uw adresgegevens in</title>
-         <link rel="stylesheet" href="Src/Pizzeria/css/styles.css"/>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Geef uw klantgegevens in</h1>
-        <form class ="login" action="usercontroller.php?action=geenaccount" method="POST">
-            <label for="naam" value="naam"><input name="naam" type="text" placeholder="naam"> </label>
-            <label for="voornaam" value="voornaam"><input name="voornaam" type="text" placeholder="voornaam"> </label>
-            <label for="adres" value="adres"><input name="adres" type="text" placeholder="adres"> </label>
-            <label for="huisnummer" value="huisnummer"><input name="huisnummer" type="text" placeholder="huisnummer"> </label>
-            <label for="postcode" value="postcode"><input name="postcode" type="text" placeholder="postcode"> </label>
-            <label for="woonplaats" value="woonplaats"><input name="woonplaats" type="text" placeholder="woonplaats"> </label>
-            <label for="telefoon" value="telefoon"><input name="telefoon" type="tel" placeholder="telefoonnummer"> </label>
-                        <label for="opmerking" value="opmerking"><textarea name="opmerking" placeholder="opmerking"></textarea> </label>
-            <label for="registratie" value="maak account aan"> <input name="registratie" type="checkbox" value="maak account aan">Vink aan voor registratie</label>
-            <input name="submit" type="submit" value="verzend"> 
-        </form>
+{%extends 'base.twig' %}
+{%block title%} geef uw adresgegevens in{%endblock%}
+{% block content%}
+<h1>Geef uw klantgegevens in</h1>
+<form class ="login" action="usercontroller.php?action=geenaccount" method="POST">
+    <label for="naam" value="naam"><input name="naam" type="text" placeholder="naam"> </label>
+    <label for="voornaam" value="voornaam"><input name="voornaam" type="text" placeholder="voornaam"> </label>
+    <label for="adres" value="adres"><input name="adres" type="text" placeholder="adres"> </label>
+    <label for="huisnummer" value="huisnummer"><input name="huisnummer" type="text" placeholder="huisnummer"> </label>
+    <label for="postcode" value="postcode"><input name="postcode" type="text" placeholder="postcode"> </label>
+    <label for="woonplaats" value="woonplaats"><input name="woonplaats" type="text" placeholder="woonplaats"> </label>
+    <label for="telefoon" value="telefoon"><input name="telefoon" type="tel" placeholder="telefoonnummer"> </label>
+    <label for="opmerking" value="opmerking"><textarea name="opmerking" placeholder="opmerking"></textarea> </label>
+    <label for="registratie" value="maak account aan"> <input name="registratie" type="checkbox" value="maak account aan">Vink aan voor registratie</label>
+    <input name="submit" type="submit" value="verzend"> 
+</form>
         {% if error is defined %}
-            <div class="error">
+<div class="error">
             {% if error=='GeenLeverZone' %}
-        <p>Het spijt ons maar uw woonplaats valt buiten onze leverzone</p>
+    <p>Het spijt ons maar uw woonplaats valt buiten onze leverzone</p>
             {% elseif error=='LeegVeld' %}
-        <p>U hebt niet alle velden ingevuld gelieve het formulier na te kijken</p>
+    <p>U hebt niet alle velden ingevuld gelieve het formulier na te kijken</p>
             {% elseif error=='GeenStraatOpgegeven' %}
-        <p>U heeft geen straat opgegeven</p>
+    <p>U heeft geen straat opgegeven</p>
             {% elseif error=='GeenVoornaamOpgegeven' %}
-        <p>U hebt geen voornaam opgegeven</p>
+    <p>U hebt geen voornaam opgegeven</p>
             {% elseif error=='GeenNaamOpgegeven' %}
-        <p>U hebt geen achternaam opgegeven</p>
+    <p>U hebt geen achternaam opgegeven</p>
             {% elseif error=='GeenTelefoonOpgegeven' %}
-        <p>U hebt geen telefoon opgegeven</p>
+    <p>U hebt geen telefoon opgegeven</p>
             {% elseif error=='GeenHuisnummerOpgegeven' %}
-        <p>U hebt geen huisnummer opgegeven</p>
+    <p>U hebt geen huisnummer opgegeven</p>
             {% elseif error=='GeenPostcodeOpgegeven' %}
-        <p>U hebt geen postcode opgegeven</p>
+    <p>U hebt geen postcode opgegeven</p>
             {% elseif error=='GeenWoonplaatsOpgegeven' %}
-        <p>U hebt geen woonplaats opgegeven</p>
+    <p>U hebt geen woonplaats opgegeven</p>
             {% endif %}
-            </div>
+</div>
     {% endif %}
-        </div>
-    </body>
-</html>
+            {%endblock%}

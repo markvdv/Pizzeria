@@ -1,10 +1,20 @@
-<h1 id="productholderheader">Bestelmenu</h1>
-{% for product in producten %}
-    <div class="productholder">
-        <a href="bestelmenucontroller.php?action=voegtoe&id={{product.productid}}">
-            <div class="naam">{{product.productnaam}}</div>
-            <div class="prijs"> &euro; {{product.productprijs/100}}</div>
-            <div class="omschrijving">{{product.productomschrijving}}</div>
-        </a>
-    </div>
-{% endfor %}
+{% extends "base.twig"%}
+
+
+{%block title %}
+    Bestelmenu
+{%endblock%}
+
+{% block content%}
+    <h1 id="productholderheader">Bestelmenu</h1>
+    {% for product in producten %}
+        <div class="productholder">
+            <a href="bestelmenucontroller.php?action=voegtoe&productnaam={{product.productnaam}}">
+                <div class="naam">{{product.productnaam}}</div>
+                <div class="prijs"> &euro; {{product.productprijs/100}}</div>
+                <div class="omschrijving">{{product.productomschrijving}}</div>
+            </a>
+        </div>
+    {% endfor %}
+    {% include 'winkelmand.twig'%}
+{%endblock%}

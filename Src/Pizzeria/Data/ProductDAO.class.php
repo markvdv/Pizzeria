@@ -17,7 +17,6 @@ namespace Pizzeria\Data;
 use Pizzeria\Entities\Product;
 
 class ProductDAO extends DAO {
-private $args=array();
     /**
      * 
      * @return array: array gevuld met de productobjecten
@@ -25,33 +24,34 @@ private $args=array();
     public static function getAll() {
         $sql = "SELECT * FROM product";
         $stmt = parent::execPreppedStmt($sql);
-        $resultSet = $stmt->fetchall();
+        $resultSet = parent::$stmt->fetchall();
         $arr = array();
         foreach ($resultSet as $result) {
-            $product = Product::create($result['productid'], $result['productnaam'], $result['productomschrijving'], $result['productprijs']);
+            $product = Product::create( $result['productnaam'], $result['productomschrijving'], $result['productprijs'],$result['productaantal']);
             $arr[] = $product;
         }
         return $arr;
+        
     }
 /**
  * 
  * @param integer $id: id van het zoeken product
  * @return object: object met data van product
  */
-    public static function getById($id) {
-        $sql = "SELECT * FROM product where id=?";
+    public static function getByName($productnaam) {
+        $sql = "SELECT * FROM product where productnaam=?";
         $args = func_get_args();
-        $stmt = parent::execPreppedStmt($sql, $args);
-        $result = $stmt->fetch();
-        $product = Product::create($result['productid'], $result['productnaam'], $result['productomschrijving'], $result['productprijs']);
+        parent::execPreppedStmt($sql, $args);
+        $result = parent::$stmt->fetch();
+        $product = Product::create($result['productnaam'], $result['productomschrijving'], $result['productprijs'],$result['productaantal']);
         return $product;
     }
 /**
  * 
  * @param integer $id: id van het te verwijderen product
  */
-    public static function delete($id) {
-        $sql = "DELETE FROM product where id=?";
+    public static function delete($productnaam) {
+        $sql = "DELETE FROM product where productnaam=?";
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
     }

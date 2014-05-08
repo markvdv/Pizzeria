@@ -15,36 +15,17 @@
 namespace Pizzeria\Business;
 
 use Pizzeria\Business\ProductService;
-use Pizzeria\DTO\Winkelmand;
-use Pizzeria\DTO\Klant;
-use Pizzeria\Exceptions\WinkelmandLeegException;
+use Pizzeria\Data\AccountDAO;
 use Pizzeria\Data\BestellingDAO;
 use Pizzeria\Data\BestelregelDAO;
 use Pizzeria\Data\PostcodeDAO;
-use Pizzeria\Data\AccountDAO;
+use Pizzeria\Exceptions\WinkelmandLeegException;
 
 class ApplicatieService {
 
-    public static function prepBestelmenu() {
-        $bestelmenu = new \stdClass();
-        $bestelmenu->producten = ProductService::toonProducten();
-        $bestelmenu->winkelmand = new Winkelmand;
-        $bestelmenu->klantdata = new Klant;
-        return $bestelmenu;
-    }
-
-    public static function voegToeAanWinkelmand($id, $bestelmenu) {
-        foreach ($bestelmenu->producten as $product) {
-            if ($product->getProductid() == $id) {
-                $bestelmenu->winkelmand = $bestelmenu->winkelmand->voegRegelBij($product, $bestelmenu->winkelmand);
-            }
-        }
-        return $bestelmenu;
-    }
-
-    public static function verwijderRegelVanWinkelmand($id, $winkelmand) {
-      $winkelmand->verwijderRegel($id,$winkelmand);
-        return $winkelmand;
+    public static function geefPizzaLijst() {
+        $producten = ProductService::toonProducten();
+        return $producten;
     }
 
     public static function rondBestellingAf($winkelmand, $klant) {

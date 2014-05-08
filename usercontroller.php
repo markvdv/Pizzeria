@@ -1,8 +1,29 @@
 <?php
 
-// <editor-fold defaultstate="collapsed" desc="doctrine en twig">
-use Doctrine\Common\ClassLoader;
+use Pizzeria\Business\AdminService;
+use Pizzeria\Business\ApplicatieService;
+use Pizzeria\Business\UserService;
+use Pizzeria\DTO\Klant;
+use Pizzeria\Exceptions\EmailBestaatAlException;
+use Pizzeria\Exceptions\GeenEmailOpgegevenException;
+use Pizzeria\Exceptions\GeenHuisnummerOpgegevenException;
+use Pizzeria\Exceptions\GeenLeverZoneException;
+use Pizzeria\Exceptions\GeenNaamOpgegevenException;
+use Pizzeria\Exceptions\GeenPasswordConfirmOpgegevenException;
+use Pizzeria\Exceptions\GeenPasswordOpgegevenException;
+use Pizzeria\Exceptions\GeenPostcodeOpgegevenException;
+use Pizzeria\Exceptions\GeenStraatOpgegevenException;
+use Pizzeria\Exceptions\GeenTelefoonOpgegevenException;
+use Pizzeria\Exceptions\GeenVoornaamOpgegevenException;
+use Pizzeria\Exceptions\GeenWoonplaatsOpgegevenException;
+use Pizzeria\Exceptions\IncorrectPasswordException;
+use Pizzeria\Exceptions\PasswordsDontMatchException;
+use Pizzeria\Exceptions\UserNietGevondenException;
 
+session_start();
+// <editor-fold defaultstate="collapsed" desc="doctrine en twig">
+
+use Doctrine\Common\ClassLoader;
 require_once ('Doctrine/Common/ClassLoader.php');
 $classLoader = new ClassLoader("Pizzeria", "Src");
 $classLoader->setFileExtension(".class.php");
@@ -12,30 +33,14 @@ require_once("lib/Twig/Autoloader.php");
 Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("Src/Pizzeria/Presentation");
 $twig = new Twig_Environment($loader, array('debug' => true));
-$twig->addExtension(new Twig_Extension_Debug); // </editor-fold>
+ // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="used classes">
+ // </editor-fold>
 
-use Pizzeria\Business\UserService;
-use Pizzeria\Business\ApplicatieService;
-use Pizzeria\Business\AdminService;
-use Pizzeria\Exceptions\UserNietGevondenException;
-use Pizzeria\Exceptions\GeenEmailOpgegevenException;
-use Pizzeria\Exceptions\GeenLeverZoneException;
-use Pizzeria\Exceptions\EmailBestaatAlException;
-use Pizzeria\Exceptions\GeenNaamOpgegevenException;
-use Pizzeria\Exceptions\GeenVoornaamOpgegevenException;
-use Pizzeria\Exceptions\GeenHuisnummerOpgegevenException;
-use Pizzeria\Exceptions\GeenStraatOpgegevenException;
-use Pizzeria\Exceptions\GeenWoonplaatsOpgegevenException;
-use Pizzeria\Exceptions\GeenPostcodeOpgegevenException;
-use Pizzeria\Exceptions\GeenTelefoonOpgegevenException;
-use Pizzeria\Exceptions\GeenPasswordOpgegevenException;
-use Pizzeria\Exceptions\GeenPasswordConfirmOpgegevenException;
-use Pizzeria\Exceptions\PasswordsDontMatchException;
-use Pizzeria\Exceptions\IncorrectPasswordException; // </editor-fold>
 
-session_start();
-$bestelmenu = unserialize($_SESSION['bestelmenu']);
+
+                   $klant= new Klant();
+     $_SESSION['klant'] = serialize($klant);
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -67,7 +72,7 @@ if (isset($_GET['action'])) {
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="loguit">
         case 'loguit':
-            $bestelmenu = ApplicatieService::prepBestelmenu();
+            $bestelmenu = ApplicatieService::geefPizzaLijst();
             $_SESSION['bestelmenu'] = serialize($bestelmenu);
             unset($_SESSION['loggedin']);
             unset($_SESSION['bestellingen']);
@@ -121,17 +126,14 @@ if (isset($_GET['action'])) {
         // <editor-fold defaultstate="collapsed" desc="geenaccount redirect naar gegevens opgave en redirect naar maakaccountaan">
         case 'geenaccount':
             if (count($_POST) == 0) {
-                $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                $view .= $twig->render('geenaccount.twig');
-                $view .= $twig->render('footer.twig');
+                $view = $twig->render('geenaccount.twig');
             } else if (count($_POST) > 0) {
                 if (isset($_POST['registratie'])) {
                     $_SESSION['post'] = $_POST;
-                    $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                    $view .= $twig->render('emailregistratie.twig');
-                    $view .= $twig->render('footer.twig');
+                    $view = $twig->render('emailregistratie.twig');
                 } else {
                     try {
+                        //veldvalidatie ook met javascript?
                         $klant = UserService::controleerKlantgegevens($_POST['naam'], $_POST['voornaam'], $_POST['adres'], $_POST['huisnummer'], $_POST['telefoon'], $_POST['postcode'], $_POST['woonplaats'], $_POST['opmerking']);
                         $bestelmenu->klantdata = $klant;
                         $_SESSION['bestelmenu'] = serialize($bestelmenu);

@@ -1,25 +1,22 @@
-    {% if error=='WinkelmandIsLeeg' %}
+{%block content%}  
+  {% if error=='WinkelmandIsLeeg' %}
 <div class="error">
         <p>De winkelmand is nog leeg</p>                
 </div>
     {% endif %}
 <div class="bestelregels">
     <h1 id="bestelregelheader"> <div class='winkelmandimg'><img alt="winkelmand" src="Src/Pizzeria/img/winkelmand.png"></div><p>WinkelMand</p></h1>
-    {% if winkelmand.bestelregels is not null  %}
-        {% for key, bestelregel in winkelmand.bestelregels %}
+{% if winkelmand.bestelregels is not null  %}
+        {% for productindex,bestelregel in winkelmand.bestelregels %}
             <div class="bestelregelholder">
-                <div class="naam">{{bestelregel.productnaam}}</div>
+                <div class="naam">{{bestelregel.product.productnaam}}</div>
                 {% if besteld is not defined %}    
-                    <a  class="verwijderbutton" href="bestelmenucontroller.php?action=verwijderregel&id={{key}}"><img alt="delete" src="Src/Pizzeria/img/delete.png"></a>
+                    <a  class="verwijderbutton" href="bestelmenucontroller.php?action=verwijderregel&productindex={{productindex}}"><img alt="delete" src="Src/Pizzeria/img/delete.png"></a>
                 {% endif %}
-                <div class="prijs">&euro; {{bestelregel.productprijs/100}}</div>
+                <div class="prijs">&euro; {{bestelregel.product.productprijs/100}}</div>
             </div>
         {% endfor %}
-        {% if korting != 0 %}
-            <div class="bestelregelholder totaalprijs" >korting: &euro; {{korting}}</div>
-            <div class="bestelregelholder totaalprijs" >totaalprijs: &euro;{{totaalprijs}}</div>
-        {% endif %}
-            <div class="bestelregelholder totaalprijs" >te betalen: &euro;{{totaalprijs-korting}}</div>
+            <div class="bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
     {% endif %}
     {% if klantdata.naam is not null %}
     <div class="klantgegevens bestelregelholder">
@@ -44,3 +41,4 @@
         <a href="bestelmenucontroller.php?action=afrekenen"><button>afrekenen</button></a>
     </div>
 </div>
+{%endblock%}

@@ -25,22 +25,21 @@ class Winkelmand {
      * 
      * @param object $product
      */
-    public function VoegProductToe($product) {
-        $key = 0;
-        while (array_key_exists($key, $this->bestelregels)) {
-            $key+=1;
-        }
-        $this->bestelregels[$key] = $product;
+    public function voegProductToe($product) {
+        $this->bestelregels[] = array();
+        end($this->bestelregels);
+        $key = key($this->bestelregels);
+        $this->bestelregels[$key]['product'] = $product;
     }
-    public function verwijderProduct($id) {
-        unset($this->bestelregels[$id]);
+    public function verwijderProduct($productindex) {
+        unset($this->bestelregels[$productindex]);
     }
     public function getTotaalprijs() {
        $totaal = 0;
-       foreach($this->bestelregels as $bestelregel){
-           $totaal += $bestelregel->product->getProductprijs();
+       foreach($this->bestelregels as $product){
+           $totaal += $product['product']->getProductprijs();
        }
-       return $totaal;
+       return $totaal/100;
     }
 
     public function getBestelregels() {

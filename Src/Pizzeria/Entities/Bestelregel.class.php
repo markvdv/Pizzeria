@@ -20,23 +20,27 @@ class Bestelregel {
 
     private static $idMap = array();
     private $bestelregelid;
-    private $bestellingid;
     private $productid;
 
-    private function __construct($bestelregelid, $bestellingid,$productid) {
+    // <editor-fold defaultstate="collapsed" desc="CONSTRUCT">
+    private function __construct($bestelregelid, $productid) {
         $this->bestelregelid = $bestelregelid;
-        $this->bestellingid = $bestellingid;
-        $this->productid=$productid;
+        $this->productid = $productid;
     }
 
-    public static function create($bestelregelid, $bestellingid,$productid) {
+// </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="CREATE">
+    public static function create($bestelregelid, $productid) {
         if (!isset(self::$idMap[$bestelregelid])) {
-            self::$idMap[$bestelregelid] = new Bestelregel($bestelregelid, $bestellingid,$productid);
+            self::$idMap[$bestelregelid] = new Bestelregel($bestelregelid, $productid);
         }
         return self::$idMap[$bestelregelid];
     }
-   
-    // <editor-fold defaultstate="collapsed" desc="getter and setter">
+
+// </editor-fold>
+       
+    // <editor-fold defaultstate="collapsed" desc="GETTER/SETTER">
     public function getProductid() {
         return $this->productid;
     }

@@ -19,103 +19,58 @@ class Bestelling {
     private static $idMap = array();
     private $bestellingid;
     private $tijdstip;
-    private $naam;
-    private $voornaam;
-    private $straat;
-    private $huisnummer;
-    private $telefoon;
-    private $postcode;
-    private $opmerking;
+    private $leverplaatsid;
+    private $accountid;
 
-    private function __construct($bestellingid, $tijdstip, $naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode,$opmerking) {
+    // <editor-fold defaultstate="collapsed" desc="CONSTRUCTOR">
+    function __construct($bestellingid, $tijdstip, $leverplaatsid, $accountid) {
         $this->bestellingid = $bestellingid;
         $this->tijdstip = $tijdstip;
-        $this->naam = $naam;
-        $this->voornaam = $voornaam;
-        $this->straat = $straat;
-        $this->huisnummer = $huisnummer;
-        $this->telefoon = $telefoon;
-        $this->postcode = $postcode;
-        $this->opmerking = $opmerking;
+        $this->leverplaatsid = $leverplaatsid;
+        $this->accountid = $accountid;
     }
 
-    public static function create($bestellingid, $tijdstip, $naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode,$opmerking) {
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="CREATE">
+    public static function create($bestellingid, $tijdstip, $leverplaatsid, $accountid) {
         if (!isset(self::$idMap[$bestellingid])) {
-            self::$idMap[$bestellingid] = new Bestelling($bestellingid, $tijdstip, $naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode,$opmerking);
+            self::$idMap[$bestellingid] = new Bestelling($bestellingid, $tijdstip, $leverplaatsid, $accountid);
         }
         return self::$idMap[$bestellingid];
     }
 
-    // <editor-fold defaultstate="collapsed" desc="getter and setter">
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="GETTER/SETTER">
     public function getBestellingid() {
         return $this->bestellingid;
-    }
-
-    public function setBestellingid($bestellingid) {
-        $this->bestellingid = $bestellingid;
     }
 
     public function getTijdstip() {
         return $this->tijdstip;
     }
 
+    public function getLeverplaatsid() {
+        return $this->leverplaatsid;
+    }
+
+    public function getAccountid() {
+        return $this->accountid;
+    }
+
+    public function setBestellingid($bestellingid) {
+        $this->bestellingid = $bestellingid;
+    }
+
     public function setTijdstip($tijdstip) {
         $this->tijdstip = $tijdstip;
     }
 
-    public function getNaam() {
-        return $this->naam;
+    public function setLeverplaatsid($leverplaatsid) {
+        $this->leverplaatsid = $leverplaatsid;
     }
 
-    public function setNaam($naam) {
-        $this->naam = $naam;
-    }
-
-    public function getVoornaam() {
-        return $this->voornaam;
-    }
-
-    public function setVoornaam($voornaam) {
-        $this->voornaam = $voornaam;
-    }
-
-    public function getStraat() {
-        return $this->straat;
-    }
-
-    public function setStraat($straat) {
-        $this->straat = $straat;
-    }
-
-    public function getHuisnummer() {
-        return $this->huisnummer;
-    }
-
-    public function setHuisnummer($huisnummer) {
-        $this->huisnummer = $huisnummer;
-    }
-
-    public function getTelefoon() {
-        return $this->telefoon;
-    }
-
-    public function setTelefoon($telefoon) {
-        $this->telefoon = $telefoon;
-    }
-
-    public function getPostcode() {
-        return $this->postcode;
-    }
-
-    public function setPostcode($postcode) {
-        $this->postcode = $postcode;
-    }
-    public function getOpmerking() {
-        return $this->opmerking;
-    }
-
-    public function setOpmerking($opmerking) {
-        $this->opmerking= $opmerking;
+    public function setAccountid($accountid) {
+        $this->accountid = $accountid;
     }
 
 // </editor-fold>

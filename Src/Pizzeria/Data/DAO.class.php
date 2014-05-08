@@ -2,6 +2,7 @@
 namespace Pizzeria\Data;
 class DAO {
 protected static $db;
+protected static $stmt;
 protected static $lastInsertId;
     /** execPreppedStmt
      * 
@@ -11,15 +12,14 @@ protected static $lastInsertId;
      */
     protected static function execPreppedStmt($sql, $args = null) {
         self::$db = new \PDO(DBConfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = self::$db->prepare($sql);
+        self::$stmt = self::$db->prepare($sql);
         if ($args != null) {
-            $stmt->execute($args);
+            self::$stmt->execute($args);
         } else {
-            $stmt->execute();
+            self::$stmt->execute();
         }
         self::$lastInsertId = self::$db->lastInsertId();
         self::$db = null;
-        return $stmt;
     }
 
     public static function getLastInsertId() {
