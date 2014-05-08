@@ -8,16 +8,7 @@
     <body>
         <div class="container">
         <form class="login" action="usercontroller.php?action=nieuweaccount" method="POST">
-            <label for="email" value="email">
-                <input name="email" type="email" placeholder="email">
-            </label>
-            <label for="password" value="password">
-                <input name="password" type="password" placeholder="password">
-            </label>
-            <label for="passwordconfirm" placeholder="passwordconfirm">
-                <input name="passwordconfirm" type="password" placeholder='passwordconfirm'>
-            </label>
-            <input name="submit" type="submit" value="verzenden"> 
+          
         </form>
         {% if error is defined %}
             <div class="error">

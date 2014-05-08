@@ -2,17 +2,26 @@
 {%block title%} geef uw adresgegevens in{%endblock%}
 {% block content%}
 <h1>Geef uw klantgegevens in</h1>
-<form class ="login" action="usercontroller.php?action=geenaccount" method="POST">
-    <label for="naam" value="naam"><input name="naam" type="text" placeholder="naam"> </label>
-    <label for="voornaam" value="voornaam"><input name="voornaam" type="text" placeholder="voornaam"> </label>
-    <label for="adres" value="adres"><input name="adres" type="text" placeholder="adres"> </label>
-    <label for="huisnummer" value="huisnummer"><input name="huisnummer" type="text" placeholder="huisnummer"> </label>
-    <label for="postcode" value="postcode"><input name="postcode" type="text" placeholder="postcode"> </label>
-    <label for="woonplaats" value="woonplaats"><input name="woonplaats" type="text" placeholder="woonplaats"> </label>
-    <label for="telefoon" value="telefoon"><input name="telefoon" type="tel" placeholder="telefoonnummer"> </label>
+<form id="klantgegevens" class ="login" action="usercontroller.php?action=geenaccount" method="POST">
+    <label for="naam" value="naam"><input class="required" name="naam" type="text" placeholder="naam"> </label>
+    <label for="voornaam" value="voornaam"><input class="required" name="voornaam" type="text" placeholder="voornaam"> </label>
+    <label for="adres" value="adres"><input class="required" name="adres" type="text" placeholder="adres"> </label>
+    <label for="huisnummer" value="huisnummer"><input class="required number" name="huisnummer" type="text" placeholder="huisnummer"> </label>
+    <label for="postcode" value="postcode"><input class="required number" name="postcode" type="text" placeholder="postcode"> </label>
+    <label for="woonplaats" value="woonplaats"><input class="required" name="woonplaats" type="text" placeholder="woonplaats"> </label>
+    <label for="telefoon" value="telefoon"><input class="required" name="telefoon" type="tel" placeholder="telefoonnummer"> </label>
     <label for="opmerking" value="opmerking"><textarea name="opmerking" placeholder="opmerking"></textarea> </label>
-    <label for="registratie" value="maak account aan"> <input name="registratie" type="checkbox" value="maak account aan">Vink aan voor registratie</label>
-    <input name="submit" type="submit" value="verzend"> 
+    <label for="registratie" value="maak account aan"> <input id='CBRegistratie' name="registratie" type="checkbox" value="maak account aan">Vink aan voor registratie</label>
+    <label id="email" for="email" value="email">
+        <input name="email" type="email" placeholder="email">
+    </label>
+    <label id='password' for="password" value="password">
+        <input name="password" type="password" placeholder="password">
+    </label>
+    <label id="passwordconfirm" for="passwordconfirm" placeholder="passwordconfirm">
+        <input name="passwordconfirm" type="password" placeholder='passwordconfirm'>
+    </label>
+    <input name="submit" type="submit" value="verzenden"> 
 </form>
         {% if error is defined %}
 <div class="error">
@@ -34,7 +43,147 @@
     <p>U hebt geen postcode opgegeven</p>
             {% elseif error=='GeenWoonplaatsOpgegeven' %}
     <p>U hebt geen woonplaats opgegeven</p>
+    {% elseif error== 'PasswordsDontMatch'%}
+    <p>Passwords dont match</p>
+        {% elseif error== 'EmailBestaatAl'%}
+    <p>email already registered</p>
+        {% elseif error== 'GeenEmailOpgegeven'%}
+    <p>Geen email opgegeven</p>
+        {% elseif error== 'GeenPasswordOpgegeven'%}
+    <p>Geen paswoord opgegeven</p>
+        {% elseif error== 'GeenPasswordConfirmOpgegeven'%}
+    <p>Geen paswoordbevestiging opgegeven</p>
             {% endif %}
 </div>
     {% endif %}
             {%endblock%}
+{%block scripts%}
+<script  type="text/javascript">
+    
+    
+      var oFouten = {
+            required: {
+                /* enkel voor input type="text|password" */
+                msg: "verplicht veld",
+                test: function(elem) {
+                    return elem.value != "";
+                }
+            },
+            number: {
+                msg: "moet een getal zijn",
+                test: function(elem) {
+                    return !isNaN(parseInt(elem.value));
+                }
+            }
+        }
+    window.onload = function() {
+
+
+        //extra velden verbergen
+        var arr = new Array("email", "password", "passwordconfirm")
+        for (var i in arr) {
+            toggleExtraFields(arr[i]);
+        }
+
+//referentie checkbox
+
+        var eCheckbox = document.getElementById('CBRegistratie');
+
+//eventlistener
+
+        eCheckbox.addEventListener('change', function() {
+            for (var i in arr) {
+                toggleExtraFields(arr[i]);
+            }
+        })
+
+        //veldvalidering in JS
+      
+        var eForm = document.getElementById("klantgegevens");
+        eForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var bValid = valideer(this);
+            console.log('formulier ' + this.name + ' valideert ' + bValid);
+            if (bValid === true)
+                this.submit();
+        })
+        function valideer(frm) {
+            var bValid = true; //optimistisch geen fouten
+//lus doorheen alle form elementen van het formulier
+            for (var i = 0; i < frm.elements.length; i++) {
+//verwijder vorige foutboodschappen
+                hideErrors(frm.elements[i]);
+//valideer veld
+                var bVeld = valideerVeld(frm.elements[i]);
+                console.log("het element %s met name %s valideert %s", frm.elements[i].nodeName, frm.elements[i].name, bVeld);
+                if (bVeld === false) {
+                    bValid = false;
+                }
+            }
+            return bValid;
+        }
+
+    }
+    function valideerVeld(elem) {
+//valideert één veld volgens zijn class
+        var aFoutBoodschappen = [];
+        for (var fout in oFouten) {
+            var re = new RegExp("(^|\\s)" + fout + "(\\s|$)"); //regex 
+// fouten class aanwezig?
+            if (re.test(elem.className)) {
+                var bTest = oFouten[fout].test(elem);
+                console.log("het element %s met name %s wordt gevalideerd voor %s: %s", elem.nodeName, elem.name, fout, bTest);
+                if (bTest === false) {
+                    aFoutBoodschappen.push(oFouten[fout].msg);
+                }
+            }
+        }
+        if (aFoutBoodschappen.length > 0) {
+            showErrors(elem, aFoutBoodschappen);
+        }
+        return !(aFoutBoodschappen.length > 0);
+    }
+    function showErrors(elem, aErrors) {
+        /*
+         toont alle fouten voor één element
+         @elem     element, te valideren veld
+         @aErrors  array, fouten voor dit element
+         */
+        var eBroertje = elem.nextSibling;
+        if (!eBroertje || !(eBroertje.nodeName == "UL" && eBroertje.className == "fouten")) {
+            eBroertje = document.createElement('ul');
+            eBroertje.className = "fouten";
+            elem.parentNode.insertBefore(eBroertje, elem.nextSibling);
+        }
+//plaats alle foutberichten erin
+        for (var i = 0; i < aErrors.length; i++) {
+            var eLi = document.createElement('li');
+            eLi.innerHTML = aErrors[i];
+            eBroertje.appendChild(eLi);
+        }
+    }
+    function hideErrors(elem) {
+        /*
+         verwijdert alle fouten voor één element
+         @elem     element, te valideren veld
+         */
+        var eBroertje = elem.nextSibling;
+        if (eBroertje && eBroertje.nodeName == "UL" && eBroertje.className == "fouten") {
+            elem.parentNode.removeChild(eBroertje);
+        }
+    }
+    function toggleExtraFields(id) {
+        var elem = document.getElementById(id);
+        if (elem.style.display != "none") {
+            elem.style.display = "none";
+        }
+        else {
+            elem.style.display = "inline";
+
+        }
+    }
+
+
+</script>
+
+{%endblock%}

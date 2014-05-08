@@ -21,9 +21,11 @@ use Pizzeria\Exceptions\PasswordsDontMatchException;
 use Pizzeria\Exceptions\UserNietGevondenException;
 
 session_start();
+
 // <editor-fold defaultstate="collapsed" desc="doctrine en twig">
 
 use Doctrine\Common\ClassLoader;
+
 require_once ('Doctrine/Common/ClassLoader.php');
 $classLoader = new ClassLoader("Pizzeria", "Src");
 $classLoader->setFileExtension(".class.php");
@@ -33,14 +35,14 @@ require_once("lib/Twig/Autoloader.php");
 Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("Src/Pizzeria/Presentation");
 $twig = new Twig_Environment($loader, array('debug' => true));
- // </editor-fold>
+// </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="used classes">
- // </editor-fold>
+// </editor-fold>
 
 
-
-                   $klant= new Klant();
-     $_SESSION['klant'] = serialize($klant);
+$error = false;
+$klant = new Klant();
+$_SESSION['klant'] = serialize($klant);
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -133,6 +135,7 @@ if (isset($_GET['action'])) {
                     $view = $twig->render('emailregistratie.twig');
                 } else {
                     try {
+
                         //veldvalidatie ook met javascript?
                         $klant = UserService::controleerKlantgegevens($_POST['naam'], $_POST['voornaam'], $_POST['adres'], $_POST['huisnummer'], $_POST['telefoon'], $_POST['postcode'], $_POST['woonplaats'], $_POST['opmerking']);
                         $bestelmenu->klantdata = $klant;
@@ -141,52 +144,27 @@ if (isset($_GET['action'])) {
                         header('location:bestelmenucontroller.php?action=afrekenen');
                     } catch (GeenVoornaamOpgegevenException $GVOe) {
                         $error = 'GeenVoornaamOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenNaamOpgegevenException $GNOe) {
                         $error = 'GeenNaamOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenStraatOpgegevenException $GSOe) {
                         $error = 'GeenStraatOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenHuisnummerOpgegevenException $GHOee) {
                         $error = 'GeenHuisnummerOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenTelefoonOpgegevenException $GTOe) {
                         $error = 'GeenTelefoonOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenLeverZoneException $GLZe) {
                         $error = 'GeenLeverZone';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenPostcodeOpgegevenException $GPOe) {
                         $error = 'GeenPostcodeOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     } catch (GeenWoonplaatsOpgegevenException $GWOe) {
                         $error = 'GeenWoonplaatsOpgegeven';
-                        $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                        $view .= $twig->render('geenaccount.twig', array('error' => $error));
-                        $view .= $twig->render('footer.twig');
                     }
                 }
             }
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="welaccount redirect naar login">
         case 'welaccount':
-            $view = $twig->render('header.twig', array('ingelogd' => false,'emailadrescookie'=>$emailadres));
-            $view .= $twig->render('footer.twig');
+            $view = $twig->render('header.twig', array( 'emailadrescookie' => $emailadres));
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="verander klantgegevens">
         case 'verandergegevens':
@@ -232,5 +210,6 @@ if (isset($_GET['action'])) {
             }
     }
 }
+$view=$twig->render("geenaccount.twig",array("error"=>$error));
 echo $view;
 exit(0);
