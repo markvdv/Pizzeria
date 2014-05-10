@@ -127,7 +127,8 @@ if (isset($_GET['action'])) {
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="geenaccount redirect naar gegevens opgave en redirect naar maakaccountaan">
         case 'geenaccount':
-            if (count($_POST) == 0) {
+            
+            /*if (count($_POST) == 0) {
                 $view = $twig->render('geenaccount.twig');
             } else if (count($_POST) > 0) {
                 if (isset($_POST['registratie'])) {
@@ -160,7 +161,7 @@ if (isset($_GET['action'])) {
                         $error = 'GeenWoonplaatsOpgegeven';
                     }
                 }
-            }
+            }*/
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="welaccount redirect naar login">
         case 'welaccount':
