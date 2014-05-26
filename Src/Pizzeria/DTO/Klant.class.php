@@ -15,9 +15,7 @@
 namespace Pizzeria\DTO;
 
 class Klant {
-private $korting=0;
-private $aantalbestellingen=null;
-    public function __construct($naam=null  , $voornaam=null , $straat=null, $huisnummer=null, $telefoon=null, $postcode=null, $opmerking=null, $email = null,$aantalbestellingen= null) {
+    public function __construct($naam  , $voornaam , $straat, $huisnummer, $telefoon, $postcode, $opmerking) {
         $this->naam = $naam;
         $this->voornaam = $voornaam;
         $this->straat = $straat;
@@ -26,7 +24,6 @@ private $aantalbestellingen=null;
         $this->postcode = $postcode;
         $this->opmerking = $opmerking;
         $this->email = $email;
-        $this->aantalbestellingen = $aantalbestellingen;
     }
 
     public function getNaam() {
@@ -85,27 +82,6 @@ private $aantalbestellingen=null;
         $this->opmerking = $opmerking;
     }
 
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-    public function getAantalBestellingen() {
-        return $this->aantalbestellingen;
-    }
-
-    public function setAantalBestellingen($aantalbestellingen) {
-        $this->aantalbestellingen= $aantalbestellingen;
-    }
-    public function getKorting() {
-        return $this->korting;
-    }
-
-    public function setKorting($korting) {
-        $this->korting= $korting;
-    }
 
 
 }

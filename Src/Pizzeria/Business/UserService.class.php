@@ -19,13 +19,6 @@ use Pizzeria\Data\PostcodeDAO;
 use Pizzeria\DTO\Klant;
 use Pizzeria\Exceptions\GeenEmailOpgegevenException;
 use Pizzeria\Exceptions\UserNietGevondenException;
-use Pizzeria\Exceptions\GeenPostcodeOpgegevenException;
-use Pizzeria\Exceptions\GeenWoonplaatsOpgegevenException;
-use Pizzeria\Exceptions\GeenHuisnummerOpgegevenException;
-use Pizzeria\Exceptions\GeenTelefoonOpgegevenException;
-use Pizzeria\Exceptions\GeenStraatOpgegevenException;
-use Pizzeria\Exceptions\GeenNaamOpgegevenException;
-use Pizzeria\Exceptions\GeenVoornaamOpgegevenException;
 use Pizzeria\Exceptions\GeenLeverZoneException;
 use Pizzeria\Exceptions\PasswordsDontMatchException;
 use Pizzeria\Exceptions\EmailBestaatAlException;
@@ -54,36 +47,51 @@ class UserService {
         return $klant;
     }
 
-    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $opmerking) {
-        // <editor-fold defaultstate="collapsed" desc="veldcontrole Opmerking mag leegblijven">
+    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats) {
+        $foutenarray = array();
+        //checken voor velden die getallen moeten zijn enzovoorts
         if ($naam == '') {
-            throw new GeenNaamOpgegevenException;
+            //throw new GeenNaamOpgegevenException;
+            $foutenarray[] = new \Exception("Geen naam opgegeven", 0);
         }
         if ($voornaam == '') {
-            throw new GeenVoornaamOpgegevenException;
+            //throw new GeenVoornaamOpgegevenException;
+            $foutenarray[] = new \Exception("Geen voornaam opgegeven", 1);
         }
         if ($woonplaats == '') {
-            throw new GeenWoonplaatsOpgegevenException;
+            //throw new GeenWoonplaatsOpgegevenException;
+            $foutenarray[] = new \Exception("Geen woonplaats opgegeven", 2);
         }
         if ($straat == '') {
-            throw new GeenStraatOpgegevenException;
+            //throw new GeenStraatOpgegevenException;
+            $foutenarray[] = new \Exception("Geen straat opgegeven", 3);
         }
         if ($huisnummer == '') {
-            throw new GeenHuisnummerOpgegevenException;
+            //throw new GeenHuisnummerOpgegevenException;
+            $foutenarray[] = new \Exception("Geen huisnummer opgegeven", 4);
         }
         if ($postcode == '') {
-            throw new GeenPostcodeOpgegevenException;
+            //throw new GeenPostcodeOpgegevenException;
+            $foutenarray[] = new \Exception("Geen postcode opgegeven", 5);
         }
+        if (!is_numeric($postcode)) {
+            $foutenarray[] = new \Exception("Postcode is geen getal", 6);
+        }
+
         if ($telefoon == '') {
-            throw new GeenTelefoonOpgegevenException;
+            //throw new GeenTelefoonOpgegevenException;
+            $foutenarray[] = new \Exception("Geen telefoonnummer opgegeven", 7);
         }// </editor-fold>
-        // <editor-fold defaultstate="collapsed" desc="Postcodecheck of het leverzone is">
         $postcode = PostcodeDAO::getByPostcodeWoonplaats($postcode, $woonplaats);
         if (!$postcode) {
-            throw new GeenLeverZoneException;
-        }// </editor-fold>
-        $klant = self::prepKlantData($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $opmerking);
-        return $klant;
+            //  throw new GeenLeverZoneException;
+            $foutenarray[] = new \Exception("Geen lever zone", 8);
+        }
+
+
+        if (!empty($foutenarray)) {
+            return $foutenarray;
+        }
     }
 
     public static function prepKlantData($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $opmerking, $email = null, $aantalbestellingen = null) {
@@ -117,16 +125,15 @@ class UserService {
         if (!$postcode) {
             throw new GeenLeverZoneException;
         }
-        $insert=AccountDAO::insert($klantdata['naam'], $klantdata['voornaam'], $klantdata['adres'], $klantdata['huisnummer'], $klantdata['telefoon'], $postcode->getPostcodeid(), $klantdata['email'], $pw, $salt, $klantdata['opmerking'], 0);
-        $insertid=AccountDAO::getLastInsertId();
-        $account= AccountDAO::getById($insertid);
+        $insert = AccountDAO::insert($klantdata['naam'], $klantdata['voornaam'], $klantdata['adres'], $klantdata['huisnummer'], $klantdata['telefoon'], $postcode->getPostcodeid(), $klantdata['email'], $pw, $salt, $klantdata['opmerking'], 0);
+        $insertid = AccountDAO::getLastInsertId();
+        $account = AccountDAO::getById($insertid);
         return $account;
     }
 
-    public static function veranderGevens($klant,$naam=null, $voornaam=null, $straat=null, $huisnummer=null,  $telefoon=null,$postcode=null, $email=null, $opmerking=null) {
+    public static function veranderGevens($klant, $naam = null, $voornaam = null, $straat = null, $huisnummer = null, $telefoon = null, $postcode = null, $email = null, $opmerking = null) {
         $account = AccountDAO::getByEmail($klant->getEmail());
         // <editor-fold defaultstate="collapsed" desc="updaten van klantobject voor klantgegevens">
-       
         // <editor-fold defaultstate="collapsed" desc="naam=null dan moete alleen aantalbestellingen veranderd worden">
         if ($naam != null) {
             $klant->setNaam($naam);
@@ -138,31 +145,31 @@ class UserService {
             $klant->setEmail($email);
             $klant->setOpmerking($opmerking); // </editor-fold>
         }// </editor-fold>
-        
+
         if ($account) {
-            $values=array();
-            $params=array();
-             $methods=get_class_methods($account);
-            foreach ($methods as $method){
-                if (preg_match('/get/',$method)&&$method!="getKorting") {
-                    if(is_object($account->$method())){
-                       $values[]=$account->$method()->getPostcodeid();
-                       $params[]='postcodeid';
-                   }
-                   else{
-                        $values[]=$account->$method();
-                    $params[]=str_replace('get','',$method);
-                   }
+            $values = array();
+            $params = array();
+            $methods = get_class_methods($account);
+            foreach ($methods as $method) {
+                if (preg_match('/get/', $method) && $method != "getKorting") {
+                    if (is_object($account->$method())) {
+                        $values[] = $account->$method()->getPostcodeid();
+                        $params[] = 'postcodeid';
+                    } else {
+                        $values[] = $account->$method();
+                        $params[] = str_replace('get', '', $method);
+                    }
                 }
             }
-            $first=array_shift($values);
-            array_push($values,$first);
-            $first=array_shift($params);
-            array_push($params,$first);
-            $values=  array_combine($params, $values);
+            $first = array_shift($values);
+            array_push($values, $first);
+            $first = array_shift($params);
+            array_push($params, $first);
+            $values = array_combine($params, $values);
             AccountDAO::update($values);
             //AccountDAO::update($klant, $account->getAccountid());
         }
         return $klant;
     }
+
 }

@@ -24,42 +24,52 @@ use Pizzeria\Exceptions\WinkelmandLeegException;
 
 
 // <editor-fold defaultstate="collapsed" desc="setup bestelmenu">
-if (!isset($_SESSION['winkelmand']) || !isset($_SESSION['producten'])||!isset($_SESSION['loggedin'])) {
-    //$producten = ApplicatieService::geefPizzaLijst();
-    $producten = ApplicatieService::geefPizzaLijst();
+$producten = ApplicatieService::geefPizzaLijst();
+//check voor winkelmand
+if (!isset($_SESSION['winkelmand'])) {
     $winkelmand = new Winkelmand;
-    $_SESSION['producten'] = serialize($producten);
     $_SESSION['winkelmand'] = serialize($winkelmand);
+}
+//check voorloggedin of niet
+if(!isset($_SESSION['loggedin'])){
     $_SESSION['loggedin']=false;
 }
+//check voor email cookie 
 if (isset($_COOKIE['emailadres'])) {
     $emailadres = $_COOKIE['emailadres'];
 } else {
     $emailadres = null;
 }
-$producten = unserialize($_SESSION['producten']); // </editor-fold>
+//check voor klantdata
+if(isset($_SESSION['klant'])){
+   $_SESSION['klant']=unserialize( $_SESSION['klant']);
+}
+else{$klant=null;} 
+
 $winkelmand = unserialize($_SESSION['winkelmand']);
-//$klant= unserialize($_SESSION['klant']);
-if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+
+
+if ($_SESSION['loggedin'] === true) {
     //$bestelmenu->ingelogd = true;
 } else {
     //$bestelmenu->ingelogd = false;
 }
+
+
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         // <editor-fold defaultstate="collapsed" desc="oproepen van bestelmenu om bestelling te veranderen">
         case 'veranderbestelling':
-            $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-            $view .= $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'klantdata' => $bestelmenu->klantdata, 'ingelogd' => $bestelmenu->ingelogd, 'producten' => $bestelmenu->producten, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'update' => true));
-            $view .= $twig->render('winkelmand.twig', array('klantdata' => $bestelmenu->klantdata, 'producten' => $bestelmenu->producten, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs));
-            $view .= $twig->render('footer.twig');
-            break; // </editor-fold>
+            $view .= $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'ingelogd' => $_SESSION['loggedin'], 'producten' => $producten, 'winkelmand' => $winkelmand));
+            break; 
+            //// </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="voegtoe om regels bij winkelmand te voegen">
         case 'voegtoe':
             $product = ProductService::zoekProductOpNaam($_GET['productnaam']);
             $winkelmand->voegProductToe($product);
             $_SESSION['winkelmand'] = serialize($winkelmand);
-            break; // </editor-fold>
+            break; 
+            // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="verwijderregel om regel van winkelmand te verwijderen">
         case 'verwijderregel':
             $winkelmand->verwijderProduct($_GET['productindex']);
@@ -68,35 +78,28 @@ if (isset($_GET['action'])) {
         // <editor-fold defaultstate="collapsed" desc="afronden en wegschrijven van bestelling na nazicht door klant">
         case 'rondbestellingaf':
             try {
-                ApplicatieService::rondBestellingAf($bestelmenu->winkelmand, $bestelmenu->klantdata);
-                $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                $view .= $twig->render("bestelling.twig", array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'korting' => $bestelmenu->klantdata->getKorting(), 'besteld' => 'afronden'));
-                $view .= $twig->render('footer.twig');
+                ApplicatieService::rondBestellingAf($winkelmand,$klant);
+                $view = $twig->render("bestelling.twig", array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'korting' => $bestelmenu->klantdata->getKorting(), 'besteld' => 'afronden'));
             } catch (WinkelmandLeegException $WLe) {
                 $error = 'WinkelmandIsLeeg';
-                $view = $twig->render('header.twig', array('ingelogd' => $bestelmenu->ingelogd));
-                $view .= $twig->render('bestelmenu.twig', array('producten' => $bestelmenu->producten));
-                $view .= $twig->render('winkelmand.twig', array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'error' => $error));
-                $view .= $twig->render('footer.twig');
             }
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="doorverwijzing naar afrekening">
         case 'afrekenen':
 
-            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+            if ($_SESSION['loggedin'] === true) {
                 $_SESSION['winkelmand'] = serialize($winkelmand);
-                $view = $twig->render("winkelmand.twig", array('klant' => serialize($_SESSION['klant']), 'winkelmand' => $winkelmand));
-              //  $view = $twig->render("bestelling.twig", array('klantdata' => $_SESSION['klantdata'], 'winkelmand' => $winkelmand));
-            } else if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
+                $klant=serialize($_SESSION['klant']);
+                $view = $twig->render("winkelmand.twig", array('klant' =>$klant, 'winkelmand' => $winkelmand));
+            } else {
                 //redirect naar niet aangemeld
-
-                $view = $twig->render('nietaangemeld.twig');
+                $view = $twig->render('geenklantgegevens.twig');
             }
             break; // </editor-fold>
     }
 }
 if (!isset($view)) {
-    $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'producten' => $producten, 'winkelmand' => $winkelmand,'loggedin'=>$_SESSION['loggedin']));
+    $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'producten' => $producten, 'winkelmand' => $winkelmand,'loggedin'=>$_SESSION['loggedin'],'klant'=>$klant));
 }
 echo $view;
 exit(0);

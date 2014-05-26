@@ -122,22 +122,34 @@ footer{
 }
 .klantgegevens{
     margin-top:1em;
-    clear:both;
-    height:5em;
-    padding-left:2.5em;
+    padding:1em;
     background:cornsilk;
     border-radius:1em;
-   height:27em;
+    height:27em;
+    width:30%;
 }
-.klantgegevens input{
+.klantgegevens *{
     display:block;
-    margin-top:0.25em;
+    margin-top:10em;
+    width:100%;
+    margin:auto;
 }
 .klantgegevens textarea{
-    display:block;
+    width:98.5%;
 }
-.klantgegevens label{
-    clear:both;
+.jserrorklantgegevens{
+    color:white;
+    background:crimson;
+    margin-bottom:0.5em;
+        text-align:center;
+        width:101%;
+}
+.errorklantgegevens{
+    position: relative;
+    bottom:460px;
+}
+.errorklantgegevens p{
+    margin:0 3px;
 }
 /* bestellingoverzicht<editor-fold defaultstate="collapsed" desc="bestellingsoverzicht">*/
 .bestellingsoverzicht{
