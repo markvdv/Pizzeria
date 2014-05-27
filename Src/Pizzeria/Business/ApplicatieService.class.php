@@ -16,11 +16,13 @@ namespace Pizzeria\Business;
 
 use Pizzeria\Business\ProductService;
 use Pizzeria\Business\UserService;
+use Pizzeria\Business\LeverplaatsService;
 use Pizzeria\Data\AccountDAO;
 use Pizzeria\Data\BestellingDAO;
 use Pizzeria\Data\BestelregelDAO;
 use Pizzeria\Data\PostcodeDAO;
 use Pizzeria\Exceptions\WinkelmandLeegException;
+use Pizzeria\Data\LeverPlaatsDAO;
 
 class ApplicatieService {
 
@@ -29,10 +31,22 @@ class ApplicatieService {
         return $producten;
     }
 
-    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats) {
-        $foutenarray = UserService::controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats);
+    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
+        $foutenarray = UserService::controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm);
         if ($foutenarray) {
             return $foutenarray;
+        }
+        $oPostcode = PostcodeDAO::getByPostcodeWoonplaats($postcode, $woonplaats);
+
+        //check of leverplaats al in de database zit 
+        $leverplaats = LeverPlaatsDAO::getByStraatHuisnummerPostcodeid($straat, $huisnummer, $oPostcode->getPostcodeid());
+        if (!$leverplaats) {
+            $leverplaatsid = LeverplaatsService::maakLeverplaatsAan($straat, $huisnummer, $oPostcode->getPostcodeid());
+        } else {
+            $leverplaatsid = $leverplaats->getLeverplaatsid();
+        }
+        if ($cbregistratie !== null) {
+            UserService::maakAccountAan($naam, $voornaam, $leverplaatsid, $email, $password);
         }
     }
 

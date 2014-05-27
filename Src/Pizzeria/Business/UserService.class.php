@@ -15,15 +15,13 @@
 namespace Pizzeria\Business;
 
 use Pizzeria\Data\AccountDAO;
+use Pizzeria\Data\LeverPlaatsDAO;
 use Pizzeria\Data\PostcodeDAO;
 use Pizzeria\DTO\Klant;
 use Pizzeria\Exceptions\GeenEmailOpgegevenException;
-use Pizzeria\Exceptions\UserNietGevondenException;
-use Pizzeria\Exceptions\GeenLeverZoneException;
-use Pizzeria\Exceptions\PasswordsDontMatchException;
-use Pizzeria\Exceptions\EmailBestaatAlException;
-use Pizzeria\Exceptions\IncorrectPasswordException;
 use Pizzeria\Exceptions\GeenPasswordOpgegevenException;
+use Pizzeria\Exceptions\IncorrectPasswordException;
+use Pizzeria\Exceptions\UserNietGevondenException;
 
 class UserService {
 
@@ -37,17 +35,25 @@ class UserService {
         }// </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="check of account bestaat en paswoord klopt">
         $account = AccountDAO::getByEmail($email);
+        var_dump($account);
         if (!$account) {
             throw new UserNietGevondenException;
         } else if (hash('sha256', $pw . $account->getSalt()) != $account->getPw()) {
             throw new IncorrectPasswordException;
         }// </editor-fold>
-        $postcode = PostcodeDAO::getById($account->getPostcode()->getPostcodeid());
-        $klant = self::prepKlantData($account->getNaam(), $account->getVoornaam(), $account->getStraat(), $account->getHuisnummer(), $account->getTelefoon(), $postcode, $account->getOpmerking(), $account->getEmail(), $account->getAantalBestellingen());
+        $leverplaats=LeverPlaatsDAO::getById($account->getLeverplaatsId());
+        $postcode = PostcodeDAO::getById($leverplaats->getPostcodeId());
+        
+        // hier is goe over nadenken
+        //nog geen telefoonnummer
+        $klant = new Klant($account->getNaam(), $account->getVoornaam(),  $leverplaats->getStraat(),$leverplaats->getHuisnummer(),null,$postcode->getPostcode(),$postcode->getWoonplaats(),null,$account->getEmail(),$account->getAccountID() );
+       var_dump($klant);
+       die;
+        
         return $klant;
     }
 
-    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats) {
+    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
         $foutenarray = array();
         //checken voor velden die getallen moeten zijn enzovoorts
         if ($naam == '') {
@@ -87,48 +93,37 @@ class UserService {
             //  throw new GeenLeverZoneException;
             $foutenarray[] = new \Exception("Geen lever zone", 8);
         }
+        if ($cbregistratie !== null) {
+            if ($email == '') {
+                //throw new GeenPostcodeOpgegevenException;
+                $foutenarray[] = new \Exception("Geen email opgegeven", 9);
+            }
+            $emailcheck= AccountDAO::getByEmail($email);
+            if ($emailcheck){
+                 $foutenarray[] = new \Exception("Email is al geregistreerd", 10);
+            }
+            if ($password == '') {
+                //throw new GeenTelefoonOpgegevenException;
+                $foutenarray[] = new \Exception("Geen paswoord opgegeven", 11);
+            }// </editor-fold>
 
-
+            if ($passwordconfirm == '') {
+                //throw new GeenTelefoonOpgegevenException;
+                $foutenarray[] = new \Exception("Geen paswoord bevestiging opgegeven", 12);
+            }// </editor-fold>
+            if ($password !== $passwordconfirm) {
+                $foutenarray[] = new \Exception("Paswoorden komen niet overeen", 13);
+            }
+        }
         if (!empty($foutenarray)) {
             return $foutenarray;
         }
     }
 
-    public static function prepKlantData($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $opmerking, $email = null, $aantalbestellingen = null) {
-        $klant = new Klant($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $opmerking, $email, $aantalbestellingen);
-        return $klant;
-    }
-
-    public static function maakAccountAan($klantdata) {
-        // <editor-fold defaultstate="collapsed" desc="check voor lege velden en of paswoorden overeen komen">
-        if ($klantdata['email'] == "") {
-            throw new GeenEmailOpgegevenException;
-        }
-        if ($klantdata['password'] == "") {
-            throw new GeenPasswordOpgegevenException;
-        }
-        if ($klantdata['passwordconfirm'] == "") {
-            throw new GeenPasswordConfirmOpgegevenException;
-        }
-        if ($klantdata['password'] != $klantdata['passwordconfirm']) {
-            throw new PasswordsDontMatchException;
-        }// </editor-fold>
-        // <editor-fold defaultstate="collapsed" desc="check of email al is geregistreerd">
-        $account = AccountDAO::getByEmail($klantdata['email']);
-        if ($account) {
-            throw new EmailBestaatAlException;
-        }// </editor-fold>
-        // <editor-fold defaultstate="collapsed" desc="salt en paswoord hash">
-        $salt = bin2hex(openssl_random_pseudo_bytes(mt_rand(40, 50))); //random salt
-        $pw = hash('sha256', $klantdata['password'] . $salt); // </editor-fold>
-        $postcode = PostcodeDAO::getByPostcodeWoonplaats($klantdata['postcode'], $klantdata['woonplaats']);
-        if (!$postcode) {
-            throw new GeenLeverZoneException;
-        }
-        $insert = AccountDAO::insert($klantdata['naam'], $klantdata['voornaam'], $klantdata['adres'], $klantdata['huisnummer'], $klantdata['telefoon'], $postcode->getPostcodeid(), $klantdata['email'], $pw, $salt, $klantdata['opmerking'], 0);
-        $insertid = AccountDAO::getLastInsertId();
-        $account = AccountDAO::getById($insertid);
-        return $account;
+    public static function maakAccountAan($naam, $voornaam,$leverplaatsid, $email, $password) {
+         $salt = bin2hex(openssl_random_pseudo_bytes(mt_rand(40, 50))); //random salt
+        $password = hash('sha256', $password . $salt); // </editor-fold>
+        AccountDAO::insert($naam, $voornaam, $leverplaatsid,$email, $password, $salt);
     }
 
     public static function veranderGevens($klant, $naam = null, $voornaam = null, $straat = null, $huisnummer = null, $telefoon = null, $postcode = null, $email = null, $opmerking = null) {

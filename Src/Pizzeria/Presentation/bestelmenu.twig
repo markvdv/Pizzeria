@@ -2,19 +2,60 @@
 
 
 {%block title %}
-    Bestelmenu
+Bestelmenu
 {%endblock%}
 
 {% block content%}
-    <h1 id="productholderheader">Bestelmenu</h1>
+<h1 id="productholderheader">Bestelmenu</h1>
     {% for product in producten %}
-        <div class="productholder">
-            <a href="bestelmenucontroller.php?action=voegtoe&productnaam={{product.productnaam}}">
-                <div class="naam">{{product.productnaam}}</div>
-                <div class="prijs"> &euro; {{product.productprijs/100}}</div>
-                <div class="omschrijving">{{product.productomschrijving}}</div>
-            </a>
-        </div>
+<div class="productholder">
+    <a href="bestelmenucontroller.php?action=voegtoe&productnaam={{product.productnaam}}">
+        <div class="naam">{{product.productnaam}}</div>
+        <div class="prijs"> &euro; {{product.productprijs/100}}</div>
+        <div class="omschrijving">{{product.productomschrijving}}</div>
+    </a>
+</div>
     {% endfor %}
-    {% include 'winkelmand.twig'%}
+      {% if error=='WinkelmandIsLeeg' %}
+<div class="error">
+    <p>De winkelmand is nog leeg</p>                
+</div>
+    {% endif %}
+<div class="bestelregels">
+    <h1 id="bestelregelheader"> <div class='winkelmandimg'><img alt="winkelmand" src="Src/Pizzeria/img/winkelmand.png"></div><p>WinkelMand</p></h1>
+{% if winkelmand.bestelregels is not null  %}
+        {% for productindex,bestelregel in winkelmand.bestelregels %}
+    <div class="bestelregelholder">
+        <div class="naam">{{bestelregel.product.productnaam}}</div>
+                {% if besteld is not defined %}    
+        <a  class="verwijderbutton" href="bestelmenucontroller.php?action=verwijderregel&productindex={{productindex}}"><img alt="delete" src="Src/Pizzeria/img/delete.png"></a>
+                {% endif %}
+        <div class="prijs">&euro; {{bestelregel.product.productprijs/100}}</div>
+    </div>
+        {% endfor %}
+    <div class="bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
+    {% endif %}
+    {% if klant is not null %}
+    <div class="klantgegevens bestelregelholder">
+        <div>
+            <label>naam: <span>{{klant.naam}} {{klant.voornaam}}</span></label>
+        </div>
+        <div>
+            <label>adres: <span>{{klant.straat}} {{klant.huisnummer}}</span>
+                <span>{{klant.postcode.postcode}},{{klant.postcode.woonplaats}}</span></label>
+        </div>
+        <div>
+            <label>telnr: <span>{{klant.telefoon}}</span></label>
+        </div>
+        <div>
+            <label>opmerking: <span>{{klant.opmerking}}</span></label>
+        </div>
+    </div>   
+    <div class="buttons">
+        <a href="usercontroller.php?action=verandergegevens"><button>verander adresgegevens</button></a>
+        <a href="bestelmenucontroller.php?action=veranderbestelling"><button>verander bestelling</button></a>
+        {% endif %}
+        <a href="bestelmenucontroller.php?action=afrekenen"><button>afrekenen</button></a>
+    </div>
+</div>
 {%endblock%}

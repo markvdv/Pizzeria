@@ -23,24 +23,24 @@ class Account {
     private $email;
     private $pw;
     private $salt;
-    private $leverplaats;
+    private $leverplaatsid;
 
     // <editor-fold defaultstate="collapsed" desc="CONSTRUCTOR">
-    function __construct($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaats) {
+    function __construct($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid) {
         $this->accountid = $accountid;
         $this->naam = $naam;
         $this->voornaam = $voornaam;
         $this->email = $email;
         $this->pw = $pw;
         $this->salt = $salt;
-        $this->leverplaats = $leverplaats;
+        $this->leverplaatsid = $leverplaatsid;
     }
 
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="CREATE">
-    public static function create($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaats) {
+    public static function create($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid) {
         if (!isset(self::$idMap[$accountid])) {
-            self::$idMap[$accountid] = new Account($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaats);
+            self::$idMap[$accountid] = new Account($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid);
         }
         return self::$idMap[$accountid];
     }
@@ -72,8 +72,8 @@ class Account {
         return $this->salt;
     }
 
-    public function getLeverplaats() {
-        return $this->leverplaats;
+    public function getLeverplaatsId() {
+        return $this->leverplaatsid;
     }
 
     public function setAccountid($accountid) {
@@ -100,8 +100,8 @@ class Account {
         $this->salt = $salt;
     }
 
-    public function setLeverplaats($leverplaats) {
-        $this->leverplaats = $leverplaats;
+    public function setLeverplaatsId($leverplaatsid) {
+        $this->leverplaatsid = $leverplaatsid;
     }
 
 // </editor-fold>

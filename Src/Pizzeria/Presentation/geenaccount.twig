@@ -4,14 +4,14 @@
 <div id='noscript'>Javascript is niet actief. Deze pagina zal niet volledig naar behoren werken</div>
 <h1>Geef uw klantgegevens in</h1>
 <form id="klantgegevens" class ="klantgegevens" action="usercontroller.php?action=geenaccount" method="POST">
-    <input class="required" name="naam" type="text" placeholder="naam">
-    <input class="required" name="voornaam" type="text" placeholder="voornaam"> 
-    <input class="required" name="adres" type="text" placeholder="adres">
-    <input class="required number" name="huisnummer" type="text" placeholder="huisnummer">
-    <input class="required number" name="postcode" type="text" placeholder="postcode">
-    <input class="required" name="woonplaats" type="text" placeholder="woonplaats"> 
-    <input class="required" name="telefoon" type="tel" placeholder="telefoonnummer"> 
-    <textarea name="opmerking" placeholder="opmerking"></textarea> 
+    <input class="required" name="naam" type="text" placeholder="naam" value="{{klant.naam}}">
+    <input class="required" name="voornaam" type="text" placeholder="voornaam" value="{{klant.voornaam}}"> 
+    <input class="required" name="adres" type="text" placeholder="adres" value="{{klant.straat}}">
+    <input class="required number" name="huisnummer" type="text" placeholder="huisnummer" value="{{klant.huisnummer}}">
+    <input class="required number" name="postcode" type="text" placeholder="postcode" value="{{klant.postcode}}">
+    <input class="required" name="woonplaats" type="text" placeholder="woonplaats" value="{{klant.woonplaats}}"> 
+    <input class="required" name="telefoon" type="tel" placeholder="telefoonnummer" value="{{klant.telefoon}}"> 
+    <textarea name="opmerking" placeholder="opmerking">{{klant.opmerking}}</textarea> 
     <input id='CBRegistratie' name="registratie" type="checkbox" value="maak account aan">Vink aan voor registratie</label>
         <input id="email" class="required"  name="email" type="email" placeholder="email">
         <input id="password" class="required" name="password" type="password" placeholder="password">

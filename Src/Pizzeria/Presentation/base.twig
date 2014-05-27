@@ -8,7 +8,7 @@
             {%endblock%}
         </title>
         {%block styles%}
-        <link rel="stylesheet" href="src/Pizzeria/css/styles.css"/>
+        <!-- <link rel="stylesheet" href="src/Pizzeria/css/styles.css"/> -->
         {%endblock%}
     </head>
     <body>
@@ -21,15 +21,12 @@
             <div class="container">
                 <!-- login form -->
                 <div class="loginform">
-                    {% if ingelogd == false %}
+                    {% if loggedin == false %}
                     <form class="login" action="usercontroller.php?action=login" method="POST">
-                        <label for="email" value="email"><input name="email" type="email" value=" 
+                        <input name="email" type="email" value=" 
                             {% if emailadrescookie is not null %}{{emailadrescookie}}{% endif %}
-                                                                "placeholder="emailadres"> 
-                        </label>
-                        <label for="password" value="password">
-                            <input name="password" type="password" placeholder="password"> 
-                        </label>
+                               " placeholder="emailadres"> 
+                        <input name="password" type="password" placeholder="password"> 
                         <input name="login" type="submit" value="login"> 
                     </form>
                         {% if error is defined %}
@@ -58,7 +55,7 @@
                 <nav>
                     <a class="about" href="berichtcontroller.php?action=tooninfo"><button>About Us</button></a>
                     <a class="about" href="usercontroller.php?action=loguit"><button>Bestelmenu</button></a>
-                    <a href="usercontroller.php?action=adminlogin"><button>Bestellingoverzicht</button></a>
+                    <a class="about" href="usercontroller.php?action=adminlogin"><button>Bestellingoverzicht</button></a>
                 </nav>
         {%endblock%}
         </header>

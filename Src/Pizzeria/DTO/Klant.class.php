@@ -8,22 +8,38 @@
 
 /**
  * Description of Klant
- * STD class om de gegevens(adres, naam, telefoon, postcodeid) voor de levering bij te houden
+ * 
  * @author mark.vanderveken
  */
 
 namespace Pizzeria\DTO;
 
 class Klant {
-    public function __construct($naam  , $voornaam , $straat, $huisnummer, $telefoon, $postcode, $opmerking) {
+   private $naam;
+   private $voornaam;
+   private $straat;
+   private $huisnummer; 
+   private $telefoon; 
+   private $postcode;
+   private $woonplaats;
+   private $opmerking;
+   private $email;
+   private $accountid;
+    
+    
+    
+    
+    public function __construct($naam  , $voornaam , $straat, $huisnummer, $telefoon, $postcode,$woonplaats, $opmerking=null,$email=null,$accountid=null) {
         $this->naam = $naam;
         $this->voornaam = $voornaam;
         $this->straat = $straat;
         $this->huisnummer = $huisnummer;
         $this->telefoon = $telefoon;
         $this->postcode = $postcode;
+        $this->woonplaats = $woonplaats;
         $this->opmerking = $opmerking;
         $this->email = $email;
+        $this->accountid = $accountid;
     }
 
     public function getNaam() {
@@ -74,14 +90,16 @@ class Klant {
         $this->postcode = $postcode;
     }
 
-    public function getOpmerking() {
-        return $this->opmerking;
+    public function getWoonplaats() {
+        return $this->woonplaats;
     }
 
-    public function setOpmerking($opmerking) {
-        $this->opmerking = $opmerking;
+    public function setWoonplaats($woonplaats) {
+        $this->woonplaats = $woonplaats;
     }
-
+    public function getEmail() {
+        return $this->email;
+    }
 
 
 }

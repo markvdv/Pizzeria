@@ -1,3 +1,4 @@
+{%extends 'base.Twig'%}
 {%block content%}  
   {% if error=='WinkelmandIsLeeg' %}
 <div class="error">
@@ -18,17 +19,17 @@
         {% endfor %}
             <div class="bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
     {% endif %}
-    {% if klantdata.naam is not null %}
+    {% if klant is not null %}
     <div class="klantgegevens bestelregelholder">
         <div>
-            <label>naam: <span>{{klantdata.naam}} {{klantdata.voornaam}}</span></label>
+            <label>naam: <span>{{klant.naam}} {{klant.voornaam}}</span></label>
         </div>
         <div>
-            <label>adres: <span>{{klantdata.straat}} {{klantdata.huisnummer}}</span>
-                <span>{{klantdata.postcode.postcode}},{{klantdata.postcode.woonplaats}}</span></label>
+            <label>adres: <span>{{klant.straat}} {{klant.huisnummer}}</span>
+                <span>{{klant.postcode}},{{klant.woonplaats}}</span></label>
         </div>
         <div>
-            <label>telnr: <span>{{klantdata.telefoon}}</span></label>
+            <label>telnr: <span>{{klant.telefoon}}</span></label>
         </div>
         <div>
             <label>opmerking: <span>{{klantdata.opmerking}}</span></label>

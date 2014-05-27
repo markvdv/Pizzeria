@@ -1,10 +1,8 @@
-<!doctype html>
-<html>
-    <head>
-        <title>klantgegevensoverzicht</title> <link rel="stylesheet" href="Src/Pizzeria/css/styles.css"/>
-        
-    </head>
-    <body> 
+{%extends 'base.twig'%}
+{%block title%}
+klantgegevensoverzicht
+     {%endblock%}   
+  {%block content%}
         <form class ="klantgegevens" action="usercontroller.php?action=verandergegevens" method="POST">
             <label for="naam" value="naam">Naam: <input name="naam" type="text" value="{{klantdata.naam}}"> </label>
             <label for="voornaam" value="voornaam">Voornaam:<input name="voornaam" type="text" value="{{klantdata.voornaam}}"> </label>
@@ -21,7 +19,5 @@
             <label for="opmerking" value="opmerking">Opmerking: <textarea name='opmerking'>{{klantdata.opmerking}}</textarea> </label>
             <input name="submit" type="submit" value="verzend"> 
         </form>
-
-    </body>
-</html>
+{%endblock %}
 

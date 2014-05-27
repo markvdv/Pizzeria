@@ -42,7 +42,7 @@ if (isset($_COOKIE['emailadres'])) {
 }
 //check voor klantdata
 if(isset($_SESSION['klant'])){
-   $_SESSION['klant']=unserialize( $_SESSION['klant']);
+   $klant=unserialize( $_SESSION['klant']);
 }
 else{$klant=null;} 
 
@@ -60,7 +60,7 @@ if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         // <editor-fold defaultstate="collapsed" desc="oproepen van bestelmenu om bestelling te veranderen">
         case 'veranderbestelling':
-            $view .= $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'ingelogd' => $_SESSION['loggedin'], 'producten' => $producten, 'winkelmand' => $winkelmand));
+            $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'ingelogd' => $_SESSION['loggedin'], 'producten' => $producten, 'winkelmand' => $winkelmand,'klant'=>$klant));
             break; 
             //// </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="voegtoe om regels bij winkelmand te voegen">
@@ -75,31 +75,30 @@ if (isset($_GET['action'])) {
             $winkelmand->verwijderProduct($_GET['productindex']);
             $_SESSION['winkelmand'] = serialize($winkelmand);
             break; // </editor-fold>
-        // <editor-fold defaultstate="collapsed" desc="afronden en wegschrijven van bestelling na nazicht door klant">
-        case 'rondbestellingaf':
-            try {
-                ApplicatieService::rondBestellingAf($winkelmand,$klant);
-                $view = $twig->render("bestelling.twig", array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'korting' => $bestelmenu->klantdata->getKorting(), 'besteld' => 'afronden'));
-            } catch (WinkelmandLeegException $WLe) {
-                $error = 'WinkelmandIsLeeg';
-            }
-            break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="doorverwijzing naar afrekening">
         case 'afrekenen':
-
-            if ($_SESSION['loggedin'] === true) {
+            if ($_SESSION['loggedin'] ==true) {
                 $_SESSION['winkelmand'] = serialize($winkelmand);
-                $klant=serialize($_SESSION['klant']);
-                $view = $twig->render("winkelmand.twig", array('klant' =>$klant, 'winkelmand' => $winkelmand));
+                $klant=unserialize($_SESSION['klant']);
+                $view = $twig->render("winkelmand.twig", array('klant' =>$klant, 'winkelmand' => $winkelmand,'loggedin'=>$_SESSION['loggedin']));
             } else {
                 //redirect naar niet aangemeld
                 $view = $twig->render('geenklantgegevens.twig');
             }
             break; // </editor-fold>
+        // <editor-fold defaultstate="collapsed" desc="afronden en wegschrijven van bestelling na nazicht door klant">
+        case 'rondbestellingaf':
+            try {
+                ApplicatieService::rondBestellingAf($winkelmand, $klant);
+                $view = $twig->render("bestelling.twig", array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'korting' => $bestelmenu->klantdata->getKorting(), 'besteld' => 'afronden'));
+            } catch (WinkelmandLeegException $WLe) {
+                $error = 'WinkelmandIsLeeg';
+            }
+            break; // </editor-fold>
     }
 }
 if (!isset($view)) {
-    $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'producten' => $producten, 'winkelmand' => $winkelmand,'loggedin'=>$_SESSION['loggedin'],'klant'=>$klant));
+    $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'producten' => $producten, 'loggedin'=>$_SESSION['loggedin'],'klant' =>$klant, 'winkelmand' => $winkelmand));
 }
 echo $view;
 exit(0);
