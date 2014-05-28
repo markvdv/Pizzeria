@@ -17,18 +17,18 @@ class Leverplaats {
 private $leverplaatsid;
 private $straat;
 private $huisnummer;
-private $postcodeid;
+private $postcode;
 private static $idMap;
 
-private function __construct($leverplaatsid, $straat, $huisnummer, $postcodeid) {
+private function __construct($leverplaatsid, $straat, $huisnummer, $postcode) {
     $this->leverplaatsid = $leverplaatsid;
     $this->straat = $straat;
     $this->huisnummer = $huisnummer;
-    $this->postcodeid = $postcodeid;
+    $this->postcode = $postcode;
 }
-public function create($leverplaatsid, $straat, $huisnummer, $postcodeid){
+public function create($leverplaatsid, $straat, $huisnummer, $postcode){
     if(!isset(self::$idMap[$leverplaatsid])){
-        self::$idMap[$leverplaatsid]= new Leverplaats($leverplaatsid, $straat, $huisnummer, $postcodeid);
+        self::$idMap[$leverplaatsid]= new Leverplaats($leverplaatsid, $straat, $huisnummer, $postcode);
     }
     return self::$idMap[$leverplaatsid];
 }
@@ -44,9 +44,8 @@ public function getHuisnummer() {
     return $this->huisnummer;
 }
 
-public function getPostcodeid() {
-    echo $this->postcodeid;
-    return $this->postcodeid;
+public function getPostcode() {
+    return $this->postcode;
 }
 
 

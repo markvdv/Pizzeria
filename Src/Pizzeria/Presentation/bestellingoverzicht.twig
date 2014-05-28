@@ -1,46 +1,39 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Bestellingsoverzicht</title>
-    </head>
-    <body>
-
-
+{%extends 'base.twig'%}
+{%block title%} Bestellingsoverzicht{%endblock%}
+{%block content%}
 <h1>Bestellingsoverzicht</h1>
-    {%for key,bestelling in bestellingen %}
+    {%for key,bestellingid in bestellingen %}
         <table class="bestellingsoverzicht" border="1">
             <thead>
                 <tr>
-                    <td><em>klantnaam</em>:  {{bestelling.klantgegevens.naam}} ,{{bestelling.klantgegevens.voornaam}}     </td>   
-                    <td><em>klantnr</em>: {{ bestelling.klantnr}}</td>
-                    <td><em>tijdstip</em>:   {{bestelling.klantgegevens.tijdstip}}     </td>   
+                    <td><em>klantnaam</em>:  {{bestellingid.bestelling.naam}} ,{{bestellingid.bestelling.voornaam}}     </td>   
+                    <td><em>klantnr</em>: {{ bestellingid.bestelling.accountid}}</td>
+                    <td><em>tijdstip</em>:   {{bestellingid.bestelling.tijdstip}}     </td>   
                 </tr>
                 <tr>  
-                    <td colspan="3"><em>adres</em>:      {{bestelling.klantgegevens.straat}} {{bestelling.klantgegevens.huisnummer}}, {{bestelling.klantgegevens.postcode.postcode}} {{bestelling.klantgegevens.postcode.woonplaats}}</td>    </tr>
+                    <td colspan="2"><em>adres</em>:      {{bestellingid.bestelling.leverplaats.straat}} {{bestellingid.bestelling.leverplaats.huisnummer}}, {{bestellingid.bestelling.leverplaats.postcode.postcode}} {{bestellingid.bestelling.leverplaats.postcode.woonplaats}}</td> 
+                    <td><em>telefoon:</em>{{bestellingid.bestelling.telefoon}}</td>
+                </tr>
                 <tr>
                     <td colspan="2"><em>Productnaam</em></td>
                     <td><em>Prijs</em></td>
                 </tr>
             </thead>
-            {% for bestelregel in bestelling.bestelregels %}
+            {% for bestelregel in bestellingid.bestelregels %}
+
                 <tr>
-                    <td colspan="2">{{bestelregel.productnaam}}</td>
-                    <td>&euro;{{bestelregel.productprijs/100}}</td>
+                    <td colspan="2">{{bestelregel.product.productnaam}}</td>
+                    <td>&euro;{{bestelregel.product.productprijs}}</td>
                 </tr>
             {% endfor %}
             <tr>
                 <td colspan="2"><em>totaalprijs</em>: </td>
-                <td class="totaalprijsbestellingoverzicht">&euro; {{bestelling.prijs/100}}
-                {% if bestelling.korting is defined %}
-                    - &euro; {{bestelling.korting}}   
-                    = &euro; {{ (bestelling.prijs/100)-bestelling.korting }}
-                {% endif %}
+                <td class="totaalprijsbestellingoverzicht">&euro; {{bestellingid.totaalprijs}}
                 </td>
             </tr>
             <tr>
-                <td colspan="3">{{bestelling.klantgegevens.opmerking}}</td></tr>
+                <td colspan="3"><em>opmerking: </em>{{bestellingid.bestelling.opmerking}}</td></tr>
         </table>
         <a href="bestellingoverzichtcontroller.php?action=delete&id={{key}}"><div class="link">delete</div></a>
     {% endfor %}
-    </body>
-</html>
+{%endblock%}

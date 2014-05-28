@@ -3,16 +3,18 @@
 namespace Pizzeria\Data;
 
 use Pizzeria\Entities\Leverplaats;
+use Pizzeria\Entities\Postcode;
 
 class LeverPlaatsDAO extends DAO {
 
     public static function getAll() {
-        $sql = "SELECT * FROM leverplaats";
+        $sql = "SELECT * FROM leverplaats inner join postcode on leverplaats.postcodeid= postcode.postcodeid";
         $stmt = parent::execPreppedStmt($sql);
         $resultSet = $stmt->fetchall();
         $arr = array();
         foreach ($resultSet as $result) {
-            $arr[] = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $result['postcodeid']);
+            $postcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
+            $arr[] = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $postcode);
         }
         return $arr;
     }
@@ -24,26 +26,26 @@ class LeverPlaatsDAO extends DAO {
     }
 
     public static function getByStraatHuisnummerPostcodeid($straat, $huisnummer, $postcodeid) {
-        $sql = "SELECT * FROM leverplaats WHERE straat=? AND huisnummer=? AND postcodeid=?";
+        $sql = "SELECT * FROM leverplaats  inner join postcode on leverplaats.postcodeid= postcode.postcodeid WHERE straat=? AND huisnummer=? AND leverplaats.postcodeid=?";
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
-        $result=parent::$stmt->fetch();
+        $result = parent::$stmt->fetch();
         if ($result) {
-            $result = parent::$stmt->fetch();
-            $leverplaats = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $result['postcodeid']);
+            $postcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
+            $leverplaats = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $postcode);
             return $leverplaats;
         }
     }
 
     public static function getById($leverplaatsid) {
-        var_dump($leverplaatsid);
-        $sql = "SELECT * FROM leverplaats WHERE leverplaatsid=?";
+        $sql = "SELECT * FROM leverplaats inner join postcode on leverplaats.postcodeid= postcode.postcodeid WHERE leverplaatsid=?";
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
         $result = parent::$stmt->fetch();
-        if ($result){
-        $leverplaats= Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $result['postcodeid']);
-        return $leverplaats;
+        if ($result) {
+             $postcode = Postcode::create($result['postcodeid'], $result['postcode'], $result['woonplaats']);
+            $leverplaats = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $postcode);
+            return $leverplaats;
         }
     }
 

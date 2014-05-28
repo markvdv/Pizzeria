@@ -27,7 +27,7 @@ class ProductDAO extends DAO {
         $resultSet = parent::$stmt->fetchall();
         $arr = array();
         foreach ($resultSet as $result) {
-            $product = Product::create( $result['productnaam'], $result['productomschrijving'], $result['productprijs'],$result['productaantal']);
+            $product = Product::create( $result['productnaam'], $result['productomschrijving'], $result['productprijs']);
             $arr[] = $product;
         }
         return $arr;
@@ -43,7 +43,7 @@ class ProductDAO extends DAO {
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
         $result = parent::$stmt->fetch();
-        $product = Product::create($result['productnaam'], $result['productomschrijving'], $result['productprijs'],$result['productaantal']);
+        $product = Product::create($result['productnaam'], $result['productomschrijving'], $result['productprijs']);
         return $product;
     }
 /**

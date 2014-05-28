@@ -27,28 +27,27 @@ class ApplicatieService {
         return $producten;
     }
 
-    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
-        $foutenarray = UserService::controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm);
+    public static function controleerKlantgegevens($naam, $voornaam,$telefoon, $straat, $huisnummer, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
+        $foutenarray = UserService::controleerKlantgegevens($naam, $voornaam,$telefoon, $straat, $huisnummer, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm);
         if ($foutenarray) {
             return $foutenarray;
         }
         $oPostcode = PostcodeDAO::getByPostcodeWoonplaats($postcode, $woonplaats);
 
-        if ($cbregistratie !== null) {
         //check of leverplaats al in de database zit 
-            $leverplaats = LeverPlaatsDAO::getByStraatHuisnummerPostcodeid($straat, $huisnummer, $oPostcode->getPostcodeid());
-            if (!$leverplaats) {
-                $leverplaatsid = LeverplaatsService::maakLeverplaatsAan($straat, $huisnummer, $oPostcode->getPostcodeid());
-            } else {
-                $leverplaatsid = $leverplaats->getLeverplaatsid();
-            }
-            UserService::maakAccountAan($naam, $voornaam, $leverplaatsid, $email, $password);
+        $leverplaats = LeverPlaatsDAO::getByStraatHuisnummerPostcodeid($straat, $huisnummer, $oPostcode->getPostcodeid());
+        if (!$leverplaats) {
+            $leverplaatsid = LeverplaatsService::maakLeverplaatsAan($straat, $huisnummer, $oPostcode->getPostcodeid());
+        } else {
+            $leverplaatsid = $leverplaats->getLeverplaatsid();
+        }
+        if ($cbregistratie !== null) {
+            UserService::maakAccountAan($naam, $voornaam, $telefoon,$leverplaatsid, $email, $password);
         }
     }
 
     public static function rondBestellingAf($winkelmand, $klant) {
-        // <editor-fold defaultstate="collapsed" desc="check voor lege winkelmand">
-     
+
         BestellingService::rondBestellingAf($winkelmand, $klant);
     }
 

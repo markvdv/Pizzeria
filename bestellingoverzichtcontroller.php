@@ -18,12 +18,8 @@ $twig->addExtension(new Twig_Extension_Debug);
 
 use Pizzeria\Business\BestellingService;
 
-$bestelmenu = unserialize($_SESSION['bestelmenu']); // </editor-fold>
-if (!isset($_SESSION['bestellingen'])) {
+ // </editor-fold>
     $bestellingen = BestellingService::prepBestellingOverzicht();
-    $_SESSION['bestellingen'] = serialize($bestellingen);
-}
-$bestellingen = unserialize($_SESSION['bestellingen']);
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'delete':
@@ -36,10 +32,9 @@ if (isset($_GET['action'])) {
                 header('location:usercontroller.php?action=adminlogin' );
                 exit(0);
             }
-            $view = $twig->render('header.twig', array('ingelogd' => true));
-            $view .= $twig->render("bestellingoverzicht.twig", array('bestellingen' => $bestellingen));
-            $view .= $twig->render('footer.twig');
+          
             break;
     }
 }
+  $view = $twig->render("bestellingoverzicht.twig", array('bestellingen' => $bestellingen));
 echo $view;

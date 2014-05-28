@@ -35,25 +35,19 @@ class UserService {
         }// </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="check of account bestaat en paswoord klopt">
         $account = AccountDAO::getByEmail($email);
-        var_dump($account);
         if (!$account) {
             throw new UserNietGevondenException;
-        } else if (hash('sha256', $pw . $account->getSalt()) != $account->getPw()) {
+        }
+        if (hash('sha256', $pw . $account->getSalt()) != $account->getPw()) {
             throw new IncorrectPasswordException;
         }// </editor-fold>
         $leverplaats=LeverPlaatsDAO::getById($account->getLeverplaatsId());
-        $postcode = PostcodeDAO::getById($leverplaats->getPostcodeId());
-        
-        // hier is goe over nadenken
-        //nog geen telefoonnummer
-        $klant = new Klant($account->getNaam(), $account->getVoornaam(),  $leverplaats->getStraat(),$leverplaats->getHuisnummer(),null,$postcode->getPostcode(),$postcode->getWoonplaats(),null,$account->getEmail(),$account->getAccountID() );
-       var_dump($klant);
-       die;
-        
+        $postcode = PostcodeDAO::getById($leverplaats->getPostcode()->getPostcodeId());
+        $klant = new Klant($account->getNaam(), $account->getVoornaam(),$account->getTelefoon(),  $leverplaats->getStraat(),$leverplaats->getHuisnummer(),$postcode->getPostcode(),$postcode->getWoonplaats(),null,$account->getEmail(),$account->getAccountId() );
         return $klant;
     }
 
-    public static function controleerKlantgegevens($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
+    public static function controleerKlantgegevens($naam, $voornaam,$telefoon, $straat, $huisnummer, $postcode, $woonplaats, $cbregistratie, $email, $password, $passwordconfirm) {
         $foutenarray = array();
         //checken voor velden die getallen moeten zijn enzovoorts
         if ($naam == '') {
@@ -89,6 +83,7 @@ class UserService {
             $foutenarray[] = new \Exception("Geen telefoonnummer opgegeven", 7);
         }// </editor-fold>
         $postcode = PostcodeDAO::getByPostcodeWoonplaats($postcode, $woonplaats);
+        var_dump($postcode);
         if (!$postcode) {
             //  throw new GeenLeverZoneException;
             $foutenarray[] = new \Exception("Geen lever zone", 8);
@@ -124,6 +119,17 @@ class UserService {
          $salt = bin2hex(openssl_random_pseudo_bytes(mt_rand(40, 50))); //random salt
         $password = hash('sha256', $password . $salt); // </editor-fold>
         AccountDAO::insert($naam, $voornaam, $leverplaatsid,$email, $password, $salt);
+    }
+    public static function veranderGegevens($klant, $nieuwegegevens) {
+        $klant->setNaam($nieuwegegevens['naam']);
+        $klant->setVoornaam($nieuwegegevens['voornaam']);
+        $klant->setStraat($nieuwegegevens['adres']);
+        $klant->setHuisnummer($nieuwegegevens['huisnummer']);
+        $klant->setPostcode($nieuwegegevens['postcode']);
+        $klant->setWoonplaats($nieuwegegevens['woonplaats']);
+        $klant->setTelefoon($nieuwegegevens['telefoon']);
+        $klant->setOpmerking($nieuwegegevens['opmerking']);
+        return $klant;
     }
 
 }

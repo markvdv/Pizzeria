@@ -11,7 +11,7 @@ Bestelmenu
 <div class="productholder">
     <a href="bestelmenucontroller.php?action=voegtoe&productnaam={{product.productnaam}}">
         <div class="naam">{{product.productnaam}}</div>
-        <div class="prijs"> &euro; {{product.productprijs/100}}</div>
+        <div class="prijs"> &euro; {{product.productprijs}}</div>
         <div class="omschrijving">{{product.productomschrijving}}</div>
     </a>
 </div>
@@ -30,7 +30,7 @@ Bestelmenu
                 {% if besteld is not defined %}    
         <a  class="verwijderbutton" href="bestelmenucontroller.php?action=verwijderregel&productindex={{productindex}}"><img alt="delete" src="Src/Pizzeria/img/delete.png"></a>
                 {% endif %}
-        <div class="prijs">&euro; {{bestelregel.product.productprijs/100}}</div>
+        <div class="prijs">&euro; {{bestelregel.product.productprijs}}</div>
     </div>
         {% endfor %}
     <div class="bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
@@ -42,7 +42,7 @@ Bestelmenu
         </div>
         <div>
             <label>adres: <span>{{klant.straat}} {{klant.huisnummer}}</span>
-                <span>{{klant.postcode.postcode}},{{klant.postcode.woonplaats}}</span></label>
+                <span>{{klant.postcode}},{{klant.woonplaats}}</span></label>
         </div>
         <div>
             <label>telnr: <span>{{klant.telefoon}}</span></label>
@@ -53,9 +53,8 @@ Bestelmenu
     </div>   
     <div class="buttons">
         <a href="usercontroller.php?action=verandergegevens"><button>verander adresgegevens</button></a>
-        <a href="bestelmenucontroller.php?action=veranderbestelling"><button>verander bestelling</button></a>
         {% endif %}
-        <a href="bestelmenucontroller.php?action=afrekenen"><button>afrekenen</button></a>
+        <a href="bestelmenucontroller.php?action=rondbestellingaf"><button>afrekenen</button></a>
     </div>
 </div>
 {%endblock%}

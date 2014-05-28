@@ -16,19 +16,17 @@ namespace Pizzeria\Data;
 
 use Pizzeria\Entities\Bestelregel;
 use Pizzeria\Entities\Product;
-use Pizzeria\Entities\Postcode;
-use Pizzeria\Entities\Bestelling;
 
 class BestelregelDAO extends DAO {
 
     public static function getAll() {
-        $sql = "SELECT * FROM bestelregel";
-        $stmt = parent::execPreppedStmt($sql);
-        $resultSet = $stmt->fetchall(\PDO::FETCH_ASSOC);
-        $stmt = null;
+        $sql = "SELECT * FROM bestelregel inner join product on bestelregel.productnaam= product.productnaam";
+       parent::execPreppedStmt($sql);
+        $resultSet =parent::$stmt->fetchall(\PDO::FETCH_ASSOC);
         $arr = array();
         foreach ($resultSet as $result) {
-            $bestelregel = Bestelregel::create($result['bestelregelid'], $result['bestellingid'], $result['productid']);
+            $product= Product::create($result['productnaam'],$result['productomschrijving'],$result['productprijs']);
+            $bestelregel = Bestelregel::create($result['bestelregelid'],  $product,$result['bestellingid']);
             $arr[] = $bestelregel;
         }
         return $arr;

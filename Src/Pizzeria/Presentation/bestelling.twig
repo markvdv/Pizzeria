@@ -1,7 +1,7 @@
+{% extends 'base.twig'%}
+{%block content%}
 <h1>Uw bestelling</h1>
-{% if besteld =='afronden'%}
 <p>Uw bestelling is afgerond en zal spoedig geleverd worden.</p>
-{%endif%}
 <div class="bestelregelsafrekening">
     <h1 id="bestelregelheader"> 
         <div class='winkelmandimg'>
@@ -9,39 +9,29 @@
         </div>
         <p>WinkelMand</p>
     </h1>
-        {% if winkelmand.bestelregels is not null  %}
+        {% if winkelmand is not null  %}
             {% for key, bestelregel in winkelmand.bestelregels %}
                 <div class="bestelregelholder">
-                <div class="naam">{{bestelregel.productnaam}}</div>
-                <div class="prijs">&euro; {{bestelregel.productprijs/100}}</div>
+                <div class="naam">{{bestelregel['product'].productnaam}}</div>
+                <div class="prijs">&euro; {{winkelmand.totaalprijs}}</div>
                 </div>
             {% endfor %}
-            {% if klantdata.aantalbestellingen is not null %}
-            {% if korting != 0%}
-                <div class=" bestelregelholder totaalprijs" >korting: &euro; {{korting}}</div>
                 <div class=" bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
-            {% endif %}
-                <div class=" bestelregelholder totaalprijs" >te betalen: &euro;{{totaalprijs-korting}}</div>
-            {% endif %}
         {% endif %}
         <div class="klantgegevens">
             <div>
-                <label>naam: <span>{{klantdata.naam}} {{klantdata.voornaam}}</span></label>
+                <label>naam: <span>{{klant.naam}} {{klant.voornaam}}</span></label>
             </div>
             <div>
-                <label>adres: <span>{{klantdata.straat}} {{klantdata.huisnummer}}</span>
-                    <span>{{klantdata.postcode.postcode}},{{klantdata.postcode.woonplaats}}</span></label>
+                <label>adres: <span>{{klant.straat}} {{klant.huisnummer}}</span>
+                    <span>{{klant.postcode}},{{klant.woonplaats}}</span></label>
             </div>
             <div>
-                <label>telnr: <span>{{klantdata.telefoon}}</span></label>
+                <label>telnr: <span>{{klant.telefoon}}</span></label>
             </div>
             <div>
-                <label>opmerking: <span>{{klantdata.opmerking}}</span></label>
+                <label>opmerking: <span>{{klant.opmerking}}</span></label>
             </div>
         </div>        
-        {%if besteld == 'afrekenen' %}
-        <a href="usercontroller.php?action=verandergegevens"><button>verander adresgegevens</button></a>
-        <a href="bestelmenucontroller.php?action=veranderbestelling"><button>verander bestelling</button></a>
-        <a class= "checkout" href="bestelmenucontroller.php?action=rondbestellingaf"><button>checkout</button></a>
-        {%endif%}
 </div>        
+{%endblock%}

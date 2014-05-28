@@ -39,7 +39,7 @@ class Winkelmand {
        foreach($this->bestelregels as $product){
            $totaal += $product['product']->getProductprijs();
        }
-       return $totaal/100;
+       return $totaal;
     }
 
     public function getBestelregels() {

@@ -29,7 +29,7 @@ class Klant {
     
     
     
-    public function __construct($naam  , $voornaam , $straat, $huisnummer, $telefoon, $postcode,$woonplaats, $opmerking=null,$email=null,$accountid=null) {
+    public function __construct($naam  , $voornaam ,$telefoon, $straat, $huisnummer, $postcode,$woonplaats, $opmerking=null,$email=null,$accountid=null) {
         $this->naam = $naam;
         $this->voornaam = $voornaam;
         $this->straat = $straat;

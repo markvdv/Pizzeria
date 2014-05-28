@@ -19,22 +19,28 @@ class Bestelling {
     private static $idMap = array();
     private $bestellingid;
     private $tijdstip;
-    private $leverplaatsid;
+    private $leverplaats;
+    private $telefoon;
     private $accountid;
+    private $opmerking;
 
     // <editor-fold defaultstate="collapsed" desc="CONSTRUCTOR">
-    function __construct($bestellingid, $tijdstip, $leverplaatsid, $accountid) {
+    function __construct($bestellingid, $tijdstip, $naam,$voornaam,$leverplaats,$telefoon, $accountid,$opmerking) {
         $this->bestellingid = $bestellingid;
         $this->tijdstip = $tijdstip;
-        $this->leverplaatsid = $leverplaatsid;
+        $this->naam = $naam;
+        $this->voornaam = $voornaam;
+        $this->leverplaats = $leverplaats;
         $this->accountid = $accountid;
+        $this->telefoon = $telefoon;
+        $this->opmerking=$opmerking;
     }
 
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="CREATE">
-    public static function create($bestellingid, $tijdstip, $leverplaatsid, $accountid) {
+    public static function create($bestellingid, $tijdstip, $naam,$voornaam,$leverplaats,$telefoon, $accountid,$opmerking) {
         if (!isset(self::$idMap[$bestellingid])) {
-            self::$idMap[$bestellingid] = new Bestelling($bestellingid, $tijdstip, $leverplaatsid, $accountid);
+            self::$idMap[$bestellingid] = new Bestelling($bestellingid, $tijdstip, $naam,$voornaam,$leverplaats,$telefoon, $accountid,$opmerking);
         }
         return self::$idMap[$bestellingid];
     }
@@ -49,8 +55,8 @@ class Bestelling {
         return $this->tijdstip;
     }
 
-    public function getLeverplaatsid() {
-        return $this->leverplaatsid;
+    public function getLeverplaats() {
+        return $this->leverplaats;
     }
 
     public function getAccountid() {
@@ -65,13 +71,18 @@ class Bestelling {
         $this->tijdstip = $tijdstip;
     }
 
-    public function setLeverplaatsid($leverplaatsid) {
-        $this->leverplaatsid = $leverplaatsid;
+    public function setLeverplaats($leverplaats) {
+        $this->leverplaats = $leverplaats;
     }
 
     public function setAccountid($accountid) {
         $this->accountid = $accountid;
     }
-
+    public function getTelefoon() {
+        return $this->telefoon;
+    }
+    public function getOpmerking() {
+        return $this->opmerking;
+    }
 // </editor-fold>
 }

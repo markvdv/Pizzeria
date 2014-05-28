@@ -20,16 +20,18 @@ class Account {
     private $accountid;
     private $naam;
     private $voornaam;
+    private $telefoon;
     private $email;
     private $pw;
     private $salt;
     private $leverplaatsid;
 
     // <editor-fold defaultstate="collapsed" desc="CONSTRUCTOR">
-    function __construct($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid) {
+    function __construct($accountid, $naam, $voornaam,$telefoon, $email, $pw, $salt, $leverplaatsid) {
         $this->accountid = $accountid;
         $this->naam = $naam;
         $this->voornaam = $voornaam;
+        $this->telefoon = $telefoon;
         $this->email = $email;
         $this->pw = $pw;
         $this->salt = $salt;
@@ -38,9 +40,9 @@ class Account {
 
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="CREATE">
-    public static function create($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid) {
+    public static function create($accountid, $naam, $voornaam,$telefoon, $email, $pw, $salt, $leverplaatsid) {
         if (!isset(self::$idMap[$accountid])) {
-            self::$idMap[$accountid] = new Account($accountid, $naam, $voornaam, $email, $pw, $salt, $leverplaatsid);
+            self::$idMap[$accountid] = new Account($accountid, $naam, $voornaam,$telefoon, $email, $pw, $salt, $leverplaatsid);
         }
         return self::$idMap[$accountid];
     }
@@ -102,6 +104,9 @@ class Account {
 
     public function setLeverplaatsId($leverplaatsid) {
         $this->leverplaatsid = $leverplaatsid;
+    }
+    public function getTelefoon() {
+        return $this->telefoon;
     }
 
 // </editor-fold>

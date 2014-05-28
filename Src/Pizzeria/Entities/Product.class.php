@@ -20,22 +20,20 @@ class Product {
     private $productnaam;
     private $productomschrijving;
     private $productprijs;
-    private $productaantal;
 
     // <editor-fold defaultstate="collapsed" desc="CONSTRUCT">
-    function __construct($productnaam, $productomschrijving, $productprijs, $productAantal) {
+    function __construct($productnaam, $productomschrijving, $productprijs) {
         $this->productnaam = $productnaam;
         $this->productomschrijving = $productomschrijving;
         $this->productprijs = $productprijs;
-        $this->productAantal = $productAantal;
     }
 
 // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="CREATE">
-    public function create($productnaam, $productomschrijving, $productprijs, $productAantal) {
+    public function create($productnaam, $productomschrijving, $productprijs) {
         if (!isset(self::$idMap[$productnaam])) {
-            self::$idMap[$productnaam] = new Product($productnaam, $productomschrijving, $productprijs, $productAantal);
+            self::$idMap[$productnaam] = new Product($productnaam, $productomschrijving, $productprijs);
         }
         return self::$idMap[$productnaam];
     }
@@ -52,12 +50,9 @@ class Product {
     }
 
     public function getProductprijs() {
-        return $this->productprijs;
+        return $this->productprijs/100;
     }
 
-    public function getProductaantal() {
-        return $this->productaantal;
-    }
 
     public function setProductnaam($productnaam) {
         $this->productnaam = $productnaam;
@@ -71,9 +66,6 @@ class Product {
         $this->productprijs = $productprijs;
     }
 
-    public function setProductaantal($productAantal) {
-        $this->productAantal = $productaantal;
-    }
 
 // </editor-fold>
 }
