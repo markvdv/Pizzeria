@@ -126,45 +126,4 @@ class UserService {
         AccountDAO::insert($naam, $voornaam, $leverplaatsid,$email, $password, $salt);
     }
 
-    public static function veranderGevens($klant, $naam = null, $voornaam = null, $straat = null, $huisnummer = null, $telefoon = null, $postcode = null, $email = null, $opmerking = null) {
-        $account = AccountDAO::getByEmail($klant->getEmail());
-        // <editor-fold defaultstate="collapsed" desc="updaten van klantobject voor klantgegevens">
-        // <editor-fold defaultstate="collapsed" desc="naam=null dan moete alleen aantalbestellingen veranderd worden">
-        if ($naam != null) {
-            $klant->setNaam($naam);
-            $klant->setVoornaam($voornaam);
-            $klant->setStraat($straat);
-            $klant->setHuisnummer($huisnummer);
-            $klant->setPostcode($postcode);
-            $klant->setTelefoon($telefoon);
-            $klant->setEmail($email);
-            $klant->setOpmerking($opmerking); // </editor-fold>
-        }// </editor-fold>
-
-        if ($account) {
-            $values = array();
-            $params = array();
-            $methods = get_class_methods($account);
-            foreach ($methods as $method) {
-                if (preg_match('/get/', $method) && $method != "getKorting") {
-                    if (is_object($account->$method())) {
-                        $values[] = $account->$method()->getPostcodeid();
-                        $params[] = 'postcodeid';
-                    } else {
-                        $values[] = $account->$method();
-                        $params[] = str_replace('get', '', $method);
-                    }
-                }
-            }
-            $first = array_shift($values);
-            array_push($values, $first);
-            $first = array_shift($params);
-            array_push($params, $first);
-            $values = array_combine($params, $values);
-            AccountDAO::update($values);
-            //AccountDAO::update($klant, $account->getAccountid());
-        }
-        return $klant;
-    }
-
 }

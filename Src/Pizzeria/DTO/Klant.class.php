@@ -100,6 +100,13 @@ class Klant {
     public function getEmail() {
         return $this->email;
     }
-
-
+    public function getOpmerking() {
+        return $this->opmerking;
+    }
+    public function setOpmerking($opmerking) {
+        $this->opmerking= $opmerking;
+    }
+    public function getAccountid() {
+        return $this->accountid;
+    }
 }

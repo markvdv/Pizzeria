@@ -98,7 +98,7 @@ if (isset($_GET['action'])) {
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="welaccount redirect naar login">
         case 'welaccount':
-            $view = $twig->render('header.twig', array('emailadrescookie' => $emailadres));
+            $view = $twig->render('bestelmenu.twig');
             break; // </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="verander klantgegevens">
         case 'verandergegevens':

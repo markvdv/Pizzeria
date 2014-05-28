@@ -14,15 +14,12 @@
                 <div class="bestelregelholder">
                 <div class="naam">{{bestelregel.productnaam}}</div>
                 <div class="prijs">&euro; {{bestelregel.productprijs/100}}</div>
-                {% if besteld is not defined %}    
-                    <a  class="verwijderbutton" href="bestelmenucontroller.php?action=verwijderregel&id={{key}}"><img alt="delete" src="Src/Pizzeria/img/delete.png"></a>
-                {% endif %}
                 </div>
             {% endfor %}
             {% if klantdata.aantalbestellingen is not null %}
             {% if korting != 0%}
                 <div class=" bestelregelholder totaalprijs" >korting: &euro; {{korting}}</div>
-                <div class=" bestelregelholder totaalprijs" >totaalprijs: &euro;{{totaalprijs}}</div>
+                <div class=" bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
             {% endif %}
                 <div class=" bestelregelholder totaalprijs" >te betalen: &euro;{{totaalprijs-korting}}</div>
             {% endif %}

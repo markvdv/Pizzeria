@@ -58,11 +58,6 @@ if ($_SESSION['loggedin'] === true) {
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
-        // <editor-fold defaultstate="collapsed" desc="oproepen van bestelmenu om bestelling te veranderen">
-        case 'veranderbestelling':
-            $view = $twig->render('bestelmenu.twig', array('emailadrescookie' => $emailadres, 'ingelogd' => $_SESSION['loggedin'], 'producten' => $producten, 'winkelmand' => $winkelmand,'klant'=>$klant));
-            break; 
-            //// </editor-fold>
         // <editor-fold defaultstate="collapsed" desc="voegtoe om regels bij winkelmand te voegen">
         case 'voegtoe':
             $product = ProductService::zoekProductOpNaam($_GET['productnaam']);
@@ -90,7 +85,7 @@ if (isset($_GET['action'])) {
         case 'rondbestellingaf':
             try {
                 ApplicatieService::rondBestellingAf($winkelmand, $klant);
-                $view = $twig->render("bestelling.twig", array('klantdata' => $bestelmenu->klantdata, 'winkelmand' => $bestelmenu->winkelmand, 'totaalprijs' => $bestelmenu->winkelmand->totaalprijs, 'korting' => $bestelmenu->klantdata->getKorting(), 'besteld' => 'afronden'));
+                $view = $twig->render("winkelmand.twig", array('klant' => $klant, 'winkelmand' => $winkelmand,'loggedin'=>$_SESSION['loggedin']));
             } catch (WinkelmandLeegException $WLe) {
                 $error = 'WinkelmandIsLeeg';
             }

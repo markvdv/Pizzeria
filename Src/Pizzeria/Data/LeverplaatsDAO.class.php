@@ -27,9 +27,10 @@ class LeverPlaatsDAO extends DAO {
         $sql = "SELECT * FROM leverplaats WHERE straat=? AND huisnummer=? AND postcodeid=?";
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
-        if (parent::$stmt !== null) {
+        $result=parent::$stmt->fetch();
+        if ($result) {
             $result = parent::$stmt->fetch();
-            $leverplaats = Leverplaats::create($leverplaatsid, $straat, $huisnummer, $postcodeid);
+            $leverplaats = Leverplaats::create($result['leverplaatsid'], $result['straat'], $result['huisnummer'], $result['postcodeid']);
             return $leverplaats;
         }
     }

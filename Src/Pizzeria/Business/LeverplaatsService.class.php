@@ -11,12 +11,25 @@
  *
  * @author TDISK
  */
+
 namespace Pizzeria\Business;
+
 use Pizzeria\Data\LeverplaatsDAO;
 
 class LeverplaatsService {
-     public static function maakLeverPlaatsAan($straat, $huisnummer,$postcode) {
-        LeverplaatsDAO::insert($straat, $huisnummer,$postcode);
-        return LeverplaatsDAO::getLastInsertId();
+
+    public static function maakLeverPlaatsAan($straat, $huisnummer, $postcodeid) {
+        $leverplaats = LeverPlaatsDAO::getByStraatHuisnummerPostcodeid($straat, $huisnummer, $postcodeid);
+        if (!$leverplaats) {
+            LeverplaatsDAO::insert($straat, $huisnummer, $postcodeid);
+            return LeverplaatsDAO::getLastInsertId();
+        }
+        return $leverplaats->getLeverplaatsid();
     }
+
+    public static function getByStraatHuisnummerPostcodeid($straat, $huisnummer, $postcodeid) {
+        $leverplaats = LeverPlaatsDAO::getByStraatHuisnummerPostcodeid($straat, $huisnummer, $postcodeid);
+        return $leverplaats;
+    }
+
 }

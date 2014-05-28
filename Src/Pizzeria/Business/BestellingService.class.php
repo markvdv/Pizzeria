@@ -2,9 +2,10 @@
 
 namespace Pizzeria\Business;
 
+use Pizzeria\Data\AccountDAO;
 use Pizzeria\Data\BestellingDAO;
 use Pizzeria\Data\BestelregelDAO;
-use Pizzeria\Data\AccountDAO;
+use Pizzeria\Data\PostcodeDAO;
 use Pizzeria\Data\ProductDAO;
 
 /*
@@ -19,9 +20,6 @@ use Pizzeria\Data\ProductDAO;
  * @author Mark.Vanderveken
  */
 class BestellingService {
-private static $nieuweaccountkorting=2;
-private static $tiendekeerkorting=5;
-private static $aantalbestellingen;
     public static function prepBestellingOverzicht() {
         $bestellingen = BestellingDAO::getAll();
         $bestelregels = BestelregelDAO::getAll();
@@ -55,7 +53,23 @@ private static $aantalbestellingen;
         }
         return $arr;
     }
-
+    public static function rondBestellingAf($winkelmand,$klant) {
+        $postcode= PostcodeDAO::getByPostcodeWoonplaats($klant->getPostcode(), $klant->getWoonplaats());
+         //check of leverplaats al in de database zit 
+            $leverplaats = LeverPlaatsService::getByStraatHuisnummerPostcodeid($klant->getStraat(), $klant->getHuisnummer(), $postcode->getPostcodeId());
+            if (!$leverplaats) {
+                $leverplaatsid = LeverplaatsService::maakLeverplaatsAan($klant->getStraat(), $klant->getHuisnummer(), $postcode->getPostcodeId());
+            } else {
+                $leverplaatsid = $leverplaats->getLeverplaatsid();
+            }
+        BestellingDAO::insert($klant->getNaam(), $klant->getVoornaam(), $klant->getTelefoon(), $leverplaatsid, $klant->getOpmerking(),$klant->getAccountid());
+       
+       $bestellingid = BestellingDAO::getLastInsertId();
+        foreach ($winkelmand->getBestelregels() as $bestelregel) {
+            var_dump($bestelregel);
+            BestelregelDAO::insert($bestellingid, $bestelregel['product']->getProductnaam());
+        }
+    }
     
     public static function verwijderBestelling($id,$bestellingen) {
         BestellingDAO::delete($id);
@@ -65,15 +79,5 @@ private static $aantalbestellingen;
             }
         }
         return $bestellingen;
-    }
-    public static function berekenKorting($aantal) {
-        if ($aantal==0) {
-            return self::$nieuweaccountkorting;
-        }
-        if(($aantal+1)%10==0){
-            return self::$tiendekeerkorting;
-        }
-        else{ return 0;
-        }
     }
 }

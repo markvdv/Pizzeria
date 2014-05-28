@@ -21,8 +21,8 @@ class BestellingDAO extends DAO {
 
     public static function getAll() {
         $sql = "SELECT * FROM bestelling inner join postcode on bestelling.postcodeid=postcode.postcodeid";
-        $stmt = parent::execPreppedStmt($sql);
-        $resultSet = $stmt->fetchall();
+        parent::execPreppedStmt($sql);
+        $resultSet =parent::$stmt->fetchall();
         $stmt = null;
         $arr = array();
         foreach ($resultSet as $result) {
@@ -33,9 +33,12 @@ class BestellingDAO extends DAO {
         return $arr;
     }
     
-    public static function insert($naam, $voornaam, $straat, $huisnummer, $telefoon, $postcodeid,$klantnr,$opmerking) {
-        $sql="INSERT INTO bestelling (naam,voornaam,straat,huisnummer,telefoon,postcodeid,klantnr,opmerking) VALUES (?,?,?,?,?,?,?,?)";
+    public static function insert($naam, $voornaam, $telefoon, $leverplaatsid,$opmerking,$accountid) {
+        $sql="INSERT INTO bestelling (naam,voornaam,telefoon,leverplaatsid,opmerking,accountid) VALUES (?,?,?,?,?,?)";
         $args=  func_get_args();
+        foreach ($args as $arg){
+            echo $arg.'<br>';
+        }
         parent::execPreppedStmt($sql,$args);
     }
     public static function update($bestelling) {

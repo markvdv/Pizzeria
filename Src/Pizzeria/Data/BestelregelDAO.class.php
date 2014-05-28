@@ -34,8 +34,8 @@ class BestelregelDAO extends DAO {
         return $arr;
     }
 
-    public static function insert($bestellingid, $productid) {
-        $sql = "INSERT INTO bestelregel (bestellingid,productid) VALUES (?,?)";
+    public static function insert($bestellingid, $productnaam) {
+        $sql = "INSERT INTO bestelregel (bestellingid,productnaam) VALUES (?,?)";
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
     }
