@@ -13,7 +13,7 @@
             {% for key, bestelregel in winkelmand.bestelregels %}
                 <div class="bestelregelholder">
                 <div class="naam">{{bestelregel['product'].productnaam}}</div>
-                <div class="prijs">&euro; {{winkelmand.totaalprijs}}</div>
+                <div class="prijs">&euro; {{bestelregel['product'].productprijs}}</div>
                 </div>
             {% endfor %}
                 <div class=" bestelregelholder totaalprijs" >totaalprijs: &euro;{{winkelmand.totaalprijs}}</div>
